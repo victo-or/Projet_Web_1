@@ -1,0 +1,65 @@
+Table : utilisateur
+
+id : int, auto-incrémenté, clé primaire
+nom : varchar(100), obligatoire
+email : varchar(100), obligatoire
+mot_de_passe : varchar(100), obligatoire
+est_admin : boolean, obligatoire
+
+Table : timbre
+
+id : int, auto-incrémenté, clé primaire
+nom : varchar(100), obligatoire
+description : varchar(200), optionnel
+annee_emission : smallint, optionnel
+pays : varchar(100), optionnel
+prix_initial : decimal(7,2), optionnel
+categorie_id : int, clé étrangère vers la table "categorie"
+
+Table : enchere
+
+id : int, auto-incrémenté, clé primaire
+vendeur_id : int, clé étrangère vers la table "utilisateur"
+timbre_id : int, clé étrangère vers la table "timbre"
+date_debut : date, obligatoire
+date_fin : date, obligatoire
+prix_plancher : decimal(7,2), optionnel
+offre_actuelle : decimal(7,2), optionnel
+
+Table : mise
+
+id : int, auto-incrémenté, clé primaire
+enchere_id : int, clé étrangère vers la table "enchere"
+acheteur_id : int, clé étrangère vers la table "utilisateur"
+montant : decimal(7,2), obligatoire
+date_mise : datetime, obligatoire
+
+Table : favori
+
+id : int, auto-incrémenté, clé primaire
+enchere_id : int, clé étrangère vers la table "enchere"
+utilisateur_id : int, clé étrangère vers la table "utilisateur"
+date_ajout : datetime, obligatoire
+
+Table : image
+
+id : int, auto-incrémenté, clé primaire
+timbre_id : int, clé étrangère vers la table "timbre"
+fichier_image : varchar(100), obligatoire
+
+Table : categorie
+
+id : int, auto-incrémenté, clé primaire
+nom : varchar(100), obligatoire
+categorie_parent_id : int, optionnel
+
+Table : couleur
+
+id : int, auto-incrémenté, clé primaire
+nom : varchar(50), obligatoire
+
+Table : timbre_couleur
+
+id : int, auto-incrémenté, clé primaire
+timbre_id : int, clé étrangère vers la table "timbre"
+couleur_id : int, clé étrangère vers la table "couleur"

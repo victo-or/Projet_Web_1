@@ -1,0 +1,36 @@
+<div class="enchere">
+  <div class="image">
+    <img src="medias/image_principale/{{ enchere.timbre_image_principale }}.webp" alt="Image principale du timbre">
+    {% for image in images %}
+      <img src="{{ image_fichier }}" alt="Image supplémentaire du timbre">
+    {% endfor %}
+  </div>
+  <div class="details">
+    <div class="dates">
+      <span class="label">Date de début :</span> {{ enchere.enchere_date_debut }}<br>
+      <span class="label">Date de fin :</span> {{ enchere.enchere_date_fin }}<br>
+      <span class="label">Temps restant :</span> {{ enchere.temps_restant }}
+    </div>
+    <div class="offre">
+      <span class="label">Offre actuelle :</span>
+      C$ {% if enchere.offre_actuelle is not null %}{{ enchere.offre_actuelle }}{% else %}0{% endif %}
+      <span class="label">Nombre de mises :</span> {{ enchere.nb_mises }}
+    </div>
+    <div class="vendeur">
+      <span class="label">Vendeur :</span> {{ enchere.pseudo }}
+    </div>
+    <div class="timbre">
+      <span class="label">Nom :</span> {{ enchere.timbre_nom }}<br>
+      <span class="label">Date de création :</span> {{ enchere.timbre_date_creation }}<br>
+      <span class="label">Pays d'origine :</span> {{ enchere.timbre_pays_origine }}<br>
+      <span class="label">Couleur :</span> {{ enchere.timbre_couleur }}<br>
+      <span class="label">Condition :</span> {{ enchere.timbre_condition }}<br>
+      <span class="label">Tirage :</span> {{ enchere.timbre_tirage }}<br>
+      <span class="label">Dimensions :</span> {{ enchere.timbre_longueur }} x {{ enchere.timbre_largeur }}<br>
+      <span class="label">Certifié :</span> {% if enchere.timbre_certifie %}Oui{% else %}Non{% endif %}
+    </div>
+    <div class="description">
+      <span class="label">Description :</span> {{ enchere.timbre_description }}
+    </div>
+  </div>
+</div>

@@ -1,0 +1,91 @@
+## Liste des entités
+
+a) timbre
+b) image
+c) timbre_couleur
+d) couleur
+e) enchere
+f) mise
+g) favori
+h) utilisateur
+i) admin
+
+### Décrire les entités
+
+a) Timbre
+    1) timbre_id : int (incrémenté), nombre incrémenté, obligatoire, unique (clé primaire)
+    2) nom : varchar(100), obligatoire
+    3) date_creation : Date, obligatoire
+    4) pays_origine : chaîne (50), obligatoire
+    5) image_principale : varchar(100), chaîne (100), obligatoire
+    6) condition : varchar(20), chaîne (20), obligatoire
+    7) tirage : int, nombre entier, optionnel
+    8) longueur : decimal(7,2), optionnel
+    9) largeur : decimal(7,2), optionnel
+    10) certifie : tinyint(1), optionnel, 0 ou 1
+    11) description : varchar(500), optionnel
+
+
+    x) couleur : varchar(50), chaîne (50), optionnel
+    x) images_supplementaires : varchar (500), chaîne (500), optionnel
+    x) dimensions : varchar(50), chaîne (50), optionnel
+
+
+b) image
+    1) image_id : int, auto-incrémenté, clé primaire
+    2) id_timbre : int, clé étrangère vers la table "timbre"
+    3) fichier_image : varchar(100), obligatoire
+
+c) timbre_couleur
+    1) timbre_couleur_id : int, auto-incrémenté, clé primaire
+    2) id_timbre : int, clé étrangère vers la table "timbre"
+    3) id_couleur : int, clé étrangère vers la table "couleur"
+
+d) couleur
+    1) couleur_id : int, auto-incrémenté, clé primaire
+    2) nom : varchar(50), obligatoire, unique
+
+e) enchere
+
+    1) enchere_id : bigint, obligatoire, unique
+    2) id_vendeur : nombre entier, obligatoire, clé étrangère (référence à la table Utilisateur)
+    3) id_acheteur : nombre entier, optionnel, clé étrangère (référence à la table Utilisateur)
+    4) id_timbre : nombre entier, obligatoire, clé étrangère (référence à la table Timbre)
+    5) date_debut : Datetime, obligatoire
+    6) date_fin : Datetime, obligatoire
+    7) prix_plancher : nombre décimal (7,2), obligatoire
+    9) offre_actuelle : nombre décimal (7,2), obligatoire
+    (redondant et requiert un UPDATE, mais plus optimal)
+    10) nb_mises : tinyint unsigned, autoincremente obligatoire
+    (redondant et requiert un UPDATE, mais plus optimal)
+    11) cdc_lord : boolean, optionnel
+
+
+f) mise
+    1) mise_id : int (incrémenté), obligatoire, clé primaire
+    2) id_utilisateur : int, obligatoire, référence à la table "utilisateur"
+    3) id_enchere : int, obligatoire, référence à la table "enchere"
+    4) montant : decimal(7,2), obligatoire
+    5) date : datetime, obligatoire
+
+g) favori
+    1) favori_id : int (incrémenté), obligatoire, clé primaire
+    2) id_utilisateur : int, obligatoire, référence à la table "utilisateur"
+    3) id_enchere : int, obligatoire, référence à la table "enchere"
+    4) date : date, obligatoire
+
+h) utilisateur
+    1) utilisateur_id : nombre incrémenté, obligatoire, unique
+    2) prenom : chaîne (100), obligatoire
+    3) nom : chaîne (100), obligatoire
+    4) pseudo : chaîne (50), obligatoire, unique
+    5) email : chaîne (100), obligatoire, unique
+    6) mdp : chaîne (128), obligatoire
+
+i) admin
+
+    1) admin_id : int (incrémenté), obligatoire, clé primaire
+    2) nom : varchar(100), obligatoire
+    3) prenom : varchar(100), obligatoire
+    4) email : varchar(100), obligatoire, unique
+    5) mot_de_passe : varchar(100), obligatoire

@@ -1,0 +1,165 @@
+li.filter-color-container {
+    display: flex;
+    margin-right: 1rem;
+}
+/* pastilles de couleurs */
+.filter-color-sample {
+    display: flex;
+    width: 1rem;
+    height: 1rem;
+    border-radius: 50%;
+    margin-right: 10%;
+    border: 2px solid #fff;
+    float: right;
+}
+label.filter-color {
+    display: flex;
+    flex: 1;
+    justify-content: space-between;
+}
+.red {
+    background-color: #ff0000;
+}
+.blue {
+    background-color: #0000ff;
+}
+.green {
+     background-color: #008000;
+}
+.black {
+    background-color: #000;
+}
+.yellow {
+    background-color: #ffff00;
+}
+.orange {
+     background-color: #ffa500;
+}
+.purple {
+    background-color: #800080;
+}
+.pink {
+    background-color: #ffc0cb;
+}
+details label:not(summary>label) {
+    margin-left: 1rem;
+}
+/* .filter-section .radio-circle {
+    display: inline-block;
+    position: absolute;
+    left: 0;
+    top: 2px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 2px solid #ccc;
+} */
+.filter-section input[type="radio"]:checked + label .radio-circle {
+    border-color: #007bff;
+}
+
+.filter-certification-section,
+.filter-favorite-section {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 20px;
+    margin-left: 0;
+    font-weight: bold;
+}
+ .price-range {
+    margin-top: 10px;
+}
+ .price-range input[type="range"] {
+    width: 45%;
+    display: inline-block;
+}
+  
+.prix-range input[type="range"]:first-child {
+    margin-right: 10%;
+}
+
+
+
+.price-values {
+    margin-top: 10px;
+    display: flex;
+    justify-content: space-between;
+    width: 90%;
+}
+.price-values input[type="number"] {
+    border: none;
+    border-bottom: .5px solid black;
+    font-size: 14px;
+    margin-left: 5px;
+    width: 60px;
+}
+ .price-values label {
+  font-size: 14px;
+  margin-left: 5px;
+}
+
+
+
+.filter-selections {
+    
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+.filter-selection {
+    background-color: var(--couleur-gris-pale);
+    color: #333;
+    padding: 3px 5px;
+    border-radius: 2px;
+    margin: 0;
+  }
+
+
+
+aside details ul {
+    display: flex;
+    flex-direction: column;
+    gap: .25rem;
+}
+
+
+
+.filter-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+
+
+
+summary {
+    list-style: none;
+    padding-bottom: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+}
+aside summary::after {
+    content: url("data:image/svg+xml,%3Csvg width='11' height='6' viewBox='0 0 11 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 0.999511L4.70454 4.70405C5.14204 5.14155 5.85795 5.14155 6.29545 4.70405L10 0.999512' stroke='black' stroke-miterlimit='10' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    float: right;
+    margin-right: 0.5em;
+}
+aside details[open] summary::after {
+    content: url("data:image/svg+xml,%3Csvg width='11' height='6' viewBox='0 0 11 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M10 5.03223L6.29546 1.32769C5.85796 0.890186 5.14205 0.890186 4.70455 1.32769L1 5.03223' stroke='black' stroke-miterlimit='10' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    float: right;
+}
+aside details {
+    padding: 2rem 0;
+    border-bottom: 0.25px darkgray solid;
+}
+
+/* https://stackoverflow.com/questions/38213329/how-to-add-css3-transition-with-html5-details-summary-tag-reveal */
+/* Pour ouvrir les details/summary avec transition */
+details[open] summary ~ * {
+    animation: sweep .3s ease-in-out;
+  }
+  @keyframes sweep {
+    0%    {opacity: 0; transform: translateY(-10px)}
+    100%  {opacity: 1; transform: translateY(0)}
+  }

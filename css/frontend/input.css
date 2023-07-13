@@ -1,0 +1,39 @@
+details input[type="checkbox"] {
+    border: .25px solid black;
+}
+select {
+    background-color: white;
+}
+div select:not(nav select) {
+    border: 0.25px solid rgba(110, 110, 110, 1);
+    border-radius: 2px;
+  }
+nav select {
+    font-family: Garamond;
+    font-size: 1rem;
+    color: var(--couleur-accent);
+    margin: 0;
+}
+
+aside input[type="search"] {
+    min-width: 30ch;
+    border: none;
+    border-bottom: 0.5px solid black;
+}
+
+input:focus {
+    outline: none;
+}
+
+fieldset {
+    border: none;
+}
+
+legend {
+	padding-bottom: 1rem;
+	color: rgba(110, 110, 110, 1);
+	font-size: .875rem;
+}
+
+  
+  

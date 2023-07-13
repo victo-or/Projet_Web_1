@@ -1,0 +1,105 @@
+footer {
+    font-family: "EB Garamond";
+    display: flex;
+    flex-direction: column;
+    color: rgba(38, 54, 154, 1);
+}
+
+.cta {
+    /* margin-top: 1rem; */
+    background-color: rgba(70, 79, 135, 1);
+    color: #fff;
+    padding: 3rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+}
+.cta label {
+    margin: 0;
+    font-size: 1.2rem;
+    font-family: 'EB Garamond';
+    font-weight: 500;
+    text-align: center;
+    
+}
+.cta form {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    margin-top: 1rem;
+}
+.cta input[type="email"] {
+    padding: 1rem;
+    border-radius: 2px 0 0 2px;
+    border: none;
+    min-width: 100%;
+}
+.cta button {
+    background-color: rgba(236, 236, 236, 1);
+    color: rgba(38, 54, 154, 1);
+    border: 2px solid rgba(38, 54, 154, 1);
+    padding: 1rem 3rem;
+    border-radius: 0 2px 2px 0;
+    margin-left: 0rem;
+    cursor: pointer;
+    text-transform: uppercase;
+    font-family: calibri;
+    min-width: fit-content;
+}
+
+ .footer-links ul {
+  list-style: none;
+  padding: 0;
+}
+ .footer-links li {
+  margin-bottom: 10px;
+}
+ .footer-links a {
+  color: rgba(38, 54, 154, 1);
+  text-decoration: none;
+  font-size: 16px;
+}
+.footer-legal-links a:hover,
+.footer-links a:hover {
+  text-decoration: underline;
+}
+ .footer-left {
+    flex: 1;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 2rem;
+    margin: 2rem;
+}
+ .social-media {
+    flex: .25;
+    margin: 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+ .social-media h3 {
+  margin-bottom: 1rem;
+  font-size: 1.5rem;
+}
+ .social-icons {
+    flex: 1;
+    display: flex;
+    align-items: top;
+    gap: 1rem;
+}
+.footer-legal-links {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+}
+.footer-copyrights {
+    display: flex;
+    justify-content: center;
+    padding: 1rem;
+    font-size: 14px;
+}
+

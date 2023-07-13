@@ -1,0 +1,43 @@
+<dialog id="modaleCreerCompte" class="modale">
+  <section>
+    <h1>Créer un compte</h1>
+    
+    <form id="frmCreerCompte" name="frmCreerCompte" method="POST">
+
+      <br><span id="messageErreurCreerCompte">&nbsp;</span>
+
+      <label>Nom</label>
+      <input name="utilisateur_nom" value="">
+      <span id="err_utilisateur_nom">&nbsp;</span>
+
+      <label>Prénom</label>
+      <input name="utilisateur_prenom" value="">
+      <span id="err_utilisateur_prenom">&nbsp;</span>
+
+      <label>Pseudo</label>
+      <input name="utilisateur_pseudo" value="">
+      <span id="err_utilisateur_pseudo">&nbsp;</span>
+
+      <label>Courriel</label>
+      <input name="utilisateur_courriel" value="">
+      <span id="err_utilisateur_courriel">&nbsp;</span>
+
+      <label>Mot de passe</label>
+      <div class="avecOeil">
+        <input type="password" name="nouveau_mdp" value="">
+        {# <span class="oeil"></span> #}
+      </div>  
+      <span id="err_nouveau_mdp">&nbsp;</span>
+
+      <label>Confirmez le mot de passe</label>
+      <div class="avecOeil">
+        <input type="password" name="nouveau_mdp_bis" value="">
+        {# <span class="oeil"></span> #}
+      </div>
+      <span id="err_nouveau_mdp_bis">&nbsp;</span>
+
+      <input type="submit" value="Envoyer">
+
+    </form>
+  </section>
+</dialog>

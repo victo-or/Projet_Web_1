@@ -1,0 +1,49 @@
+.pagination-wrapper {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: center;
+    height: 100%;
+  }
+.pagination {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 20px;
+    width: 100%;
+}
+.prev-btn,
+.next-btn {
+    background-color: transparent;
+    border: none;
+    font-size: 14px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    margin: 0;
+    gap: 1rem;
+}
+.prev-btn {
+    color: rgba(110, 110, 110, 1);
+}
+.prev-btn svg,
+.next-btn svg {
+    margin: 0;
+}
+.pages {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 20px;
+}
+.pages a {
+    display: inline-block;
+    padding: 5px 10px;
+    margin: 0 5px;
+    border-radius: 5px;
+    text-decoration: none;
+}
+.pages a.active {
+    text-decoration: underline;
+}

@@ -1,0 +1,48 @@
+.catalogue-info {
+    display: flex;
+    flex-direction: column;
+    gap: var(--gouttiere-moyen);
+}
+
+/* Pour le texte de la collection d'enchères */
+section.catalogue-info details summary::before {
+  content: url("data:image/svg+xml,%3Csvg width='11' height='6' viewBox='0 0 11 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 0.999511L4.70454 4.70405C5.14204 5.14155 5.85795 5.14155 6.29545 4.70405L10 0.999512' stroke='black' stroke-miterlimit='10' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  margin-right: 0.5em;
+}
+section.catalogue-info details[open] summary::before {
+  content: url("data:image/svg+xml,%3Csvg width='11' height='6' viewBox='0 0 11 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M10 5.03223L6.29546 1.32769C5.85796 0.890186 5.14205 0.890186 4.70455 1.32769L1 5.03223' stroke='black' stroke-miterlimit='10' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+}
+
+/* container pour boutons "sauvegarder" et "partager" */
+.catalogue-info div {
+  display: flex;
+  gap: var(--gouttiere-moyen);
+  align-content: center;
+}
+
+/* Espacement dans le texte */
+.catalogue-info details p {
+    padding: var(--espace-petit);
+}
+
+/* Saut de ligne pour temps restant et date de fin */
+.catalogue-info aside span {
+  display: block;
+}
+
+.catalogue-info aside {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.catalogue-info picture {
+  height: 300px; /* la hauteur maximale de l'image à 300px */
+  width: 100%; /* la largeur de l'image à 100% du conteneur */
+  overflow: hidden; /* Cache tout contenu qui dépasse la hauteur et la largeur */
+}
+.catalogue-info picture img {
+  height: 100%;
+  width: 100%;
+  object-fit: cover; 
+  object-position: top left;
+}

@@ -1,0 +1,665 @@
+{# <section>
+  <h1>{{ titre|upper }}</h1>
+  <div>
+  {% for film in films %}
+    <div>
+      <a href="film?film_id={{ film.film_id }}"><img src="{{ film.film_affiche }}" alt=""></a>
+      <p class="legende">{{ film.genre_nom }} - {{ film.film_annee_sortie }} - {{ film.film_duree }} min</p>
+    </div>
+  {% else %}
+    <div>Aucun film.</div>
+  {% endfor %}
+  </div>
+</section>  #}
+
+<div>
+  <div class="sidebar">
+    <input type="checkbox" id="filter-toggle" class="filter-toggle" aria-label="Filter-toggle">
+    <aside>
+      <div class="filter-controls">
+        <span>Filtrer par :</span>
+        <button class="btn-reset">
+          Réactualiser
+          <svg
+            width="15"
+            height="15"
+            viewBox="0 0 15 15"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M1.87593 4.23905C3.00136 2.30224 5.0986 1 7.5 1C11.0899 1 14 3.91015 14 7.5C14 11.0899 11.0899 14 7.5 14C3.91015 14 1 11.0899 1 7.5"
+              stroke="black"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+            <path
+              d="M4 5H1V1"
+              stroke="black"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </button>
+      </div>
+      <form action="GET">
+        <details open>
+          <summary><label for="search-lot">Recherche de lots</label></summary>
+          <input id="search-lot"
+            class="nav-searchbar"
+            type="search"
+            placeholder="recherche par mot clé"
+          >
+          <button type="submit" class="btn-icon" aria-label="Bouton pour soumettre l'entrée de recherche de lots">
+            <svg
+              width="18"
+              height="18"
+              viewBox="0 0 23 23"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <title>Bouton pour recherche de lots</title>
+              <desc>Icône de loupe pour bouton de recherche de lots</desc>
+              <path
+                d="M15 15C11.134 15 8 11.866 8 8C8 4.13401 11.134 1 15 1C18.866 1 22 4.13401 22 8C22 11.866 18.866 15 15 15Z"
+                stroke="black"
+                stroke-width="1"
+              />
+              <path d="M1 22L10 13" stroke="black" stroke-width="1" />
+            </svg>
+          </button>
+        </details>
+        <details class="filter-section" open>
+          <summary>Pays d'origine</summary>
+          <fieldset>
+            <legend>Sélections de pays d'origine :</legend>
+            <ul>
+              <li>
+                <input
+                  type="checkbox"
+                  id="angleterre"
+                  name="pays"
+                  value="angleterre"
+                >
+                <label for="angleterre">Angleterre</label>
+              </li>
+              <li>
+                <input
+                  type="checkbox"
+                  id="canada"
+                  name="pays"
+                  value="canada"
+                >
+                <label for="canada">Canada</label>
+              </li>
+              <li>
+                <input
+                  type="checkbox"
+                  id="etats-unis"
+                  name="pays"
+                  value="etats-unis"
+                >
+                <label for="etats-unis">États-Unis</label>
+              </li>
+              <li>
+                <input
+                  type="checkbox"
+                  id="france"
+                  name="pays"
+                  value="france"
+                >
+                <label for="france">France</label>
+              </li>
+              <li>
+                <input
+                  type="checkbox"
+                  id="italie"
+                  name="pays"
+                  value="italie"
+                >
+                <label for="italie">Italie</label>
+              </li>
+              <li>
+                <input
+                  type="checkbox"
+                  id="mexique"
+                  name="pays"
+                  value="mexique"
+                >
+                <label for="mexique">Mexique</label>
+              </li>
+            </ul>
+          </fieldset>
+        </details>
+        <details class="filter-section" open>
+          <summary>Couleur</summary>
+          <fieldset>
+            <legend>Sélections de couleurs :</legend>
+            <ul>
+              <li class="filter-color-container">
+                <input
+                  type="checkbox"
+                  id="rouge"
+                  name="couleur"
+                  value="rouge"
+                >
+                <label class="filter-color" for="rouge"
+                  >Rouge <span class="filter-color-sample red"></span
+                ></label>
+              </li>
+              <li class="filter-color-container">
+                <input
+                  type="checkbox"
+                  id="bleu"
+                  name="couleur"
+                  value="bleu"
+                >
+                <label class="filter-color" for="bleu"
+                  >Bleu <span class="filter-color-sample blue"></span
+                ></label>
+              </li>
+              <li class="filter-color-container">
+                <input
+                  type="checkbox"
+                  id="vert"
+                  name="couleur"
+                  value="vert"
+                >
+                <label class="filter-color" for="vert"
+                  >Vert <span class="filter-color-sample green"></span
+                ></label>
+              </li>
+              <li class="filter-color-container">
+                <input
+                  type="checkbox"
+                  id="noir"
+                  name="couleur"
+                  value="noir"
+                >
+                <label class="filter-color" for="noir"
+                  >Noir <span class="filter-color-sample black"></span
+                ></label>
+              </li>
+              <li class="filter-color-container">
+                <input
+                  type="checkbox"
+                  id="jaune"
+                  name="couleur"
+                  value="jaune"
+                >
+                <label class="filter-color" for="jaune"
+                  >Jaune <span class="filter-color-sample yellow"></span
+                ></label>
+              </li>
+              <li class="filter-color-container">
+                <input
+                  type="checkbox"
+                  id="orange"
+                  name="couleur"
+                  value="orange"
+                >
+                <label class="filter-color" for="orange"
+                  >Orange <span class="filter-color-sample orange"></span
+                ></label>
+              </li>
+              <li class="filter-color-container">
+                <input
+                  type="checkbox"
+                  id="violet"
+                  name="couleur"
+                  value="violet"
+                >
+                <label class="filter-color" for="violet"
+                  >Violet <span class="filter-color-sample purple"></span
+                ></label>
+              </li>
+              <li class="filter-color-container">
+                <input
+                  type="checkbox"
+                  id="rose"
+                  name="couleur"
+                  value="rose"
+                >
+                <label class="filter-color" for="rose"
+                  >Rose <span class="filter-color-sample pink"></span
+                ></label>
+              </li>
+            </ul>
+          </fieldset>
+        </details>
+        <details class="filter-section" open>
+          <summary>Condition</summary>
+          <fieldset>
+            <legend>Sélections de conditions :</legend>
+            <ul>
+              <li>
+                <input
+                  type="checkbox"
+                  id="parfaite"
+                  name="condition"
+                  value="parfaite"
+                >
+                <label for="parfaite">Parfaite</label>
+              </li>
+              <li>
+                <input
+                  type="checkbox"
+                  id="excellente"
+                  name="condition"
+                  value="excellente"
+                >
+                <label for="excellente">Excellente</label>
+              </li>
+              <li>
+                <input
+                  type="checkbox"
+                  id="bonne"
+                  name="condition"
+                  value="bonne"
+                >
+                <label for="bonne">Bonne</label>
+              </li>
+              <li>
+                <input
+                  type="checkbox"
+                  id="moyenne"
+                  name="condition"
+                  value="moyenne"
+                >
+                <label for="moyenne">Moyenne</label>
+              </li>
+              <li>
+                <input
+                  type="checkbox"
+                  id="endommage"
+                  name="condition"
+                  value="endommage"
+                >
+                <label for="endommage">Endommagé</label>
+              </li>
+            </ul>
+          </fieldset>
+        </details>
+        <details class="price-section" open>
+          <summary>Prix</summary>
+          <div class="price-values">
+            <label for="price-min">
+              $C
+              <input type="number" id="price-min" >
+              min
+            </label>
+            -
+            <label for="price-max">
+              $C
+              <input type="number" id="price-max" >
+              max
+            </label>
+          </div>
+        </details>
+        <details class="filter-section" open>
+          <summary>Période de création</summary>
+          <fieldset>
+            <legend>Sélections de périodes de création :</legend>
+            <ul>
+              <li>
+                <input
+                  type="checkbox"
+                  id="avant-1900"
+                  name="periode-creation"
+                  value="avant-1900"
+                >
+                <label for="avant-1900">Avant 1900</label>
+              </li>
+              <li>
+                <input
+                  type="checkbox"
+                  id="1900-1920"
+                  name="periode-creation"
+                  value="1900-1920"
+                >
+                <label for="1900-1920">1900-1920</label>
+              </li>
+              <li>
+                <input
+                  type="checkbox"
+                  id="1921-1940"
+                  name="periode-creation"
+                  value="1921-1940"
+                >
+                <label for="1921-1940">1921-1940</label>
+              </li>
+              <li>
+                <input
+                  type="checkbox"
+                  id="1941-1960"
+                  name="periode-creation"
+                  value="1941-1960"
+                >
+                <label for="1941-1960">1941-1960</label>
+              </li>
+              <li>
+                <input
+                  type="checkbox"
+                  id="1961-1980"
+                  name="periode-creation"
+                  value="1961-1980"
+                >
+                <label for="1961-1980">1961-1980</label>
+              </li>
+              <li>
+                <input
+                  type="checkbox"
+                  id="1981-2000"
+                  name="periode-creation"
+                  value="1981-2000"
+                >
+                <label for="1981-2000">1981-2000</label>
+              </li>
+              <li>
+                <input
+                  type="checkbox"
+                  id="2001-2020"
+                  name="periode-creation"
+                  value="2001-2020"
+                >
+                <label for="2001-2020">2001-2020</label>
+              </li>
+              <li>
+                <input
+                  type="checkbox"
+                  id="apres-2020"
+                  name="periode-creation"
+                  value="apres-2020"
+                >
+                <label for="apres-2020">Après 2020</label>
+              </li>
+            </ul>
+          </fieldset>
+        </details>
+        <details class="filter-section" open>
+          <summary>Tirage</summary>
+          <fieldset>
+            <legend>Sélections de tirages :</legend>
+            <ul>
+              <li>
+                <input
+                  type="checkbox"
+                  id="illimite"
+                  name="tirage"
+                  value="illimite"
+                >
+                <label for="illimite">Illimité</label>
+              </li>
+              <li>
+                <input
+                  type="checkbox"
+                  id="numerote"
+                  name="tirage"
+                  value="numerote"
+                >
+                <label for="numerote">Numéroté</label>
+              </li>
+              <li>
+                <input
+                  type="checkbox"
+                  id="edition-limitee"
+                  name="tirage"
+                  value="edition-limitee"
+                >
+                <label for="edition-limitee">Édition limitée</label>
+              </li>
+              <li>
+                <input
+                  type="checkbox"
+                  id="tirage-limite"
+                  name="tirage"
+                  value="tirage-limite"
+                >
+                <label for="tirage-limite">Tirage limité</label>
+              </li>
+              <li>
+                <input
+                  type="checkbox"
+                  id="sans-tirage-specifie"
+                  name="tirage"
+                  value="sans-tirage-specifie"
+                >
+                <label for="sans-tirage-specifie">Sans tirage spécifié</label>
+              </li>
+            </ul>
+          </fieldset>
+        </details>
+        <details class="filter-section" open>
+          <summary>Taille</summary>
+          <fieldset>
+            <legend>Sélection d'unités :</legend>
+            <ul>
+              <li>
+                <input type="radio" id="cm" name="unit" value="cm" checked >
+                <label for="cm">cm</label>
+              </li>
+              <li>
+                <input type="radio" id="inches" name="unit" value="inches" >
+                <label for="inches"
+                  >pouces</label
+                >
+              </li>
+            </ul>
+          </fieldset>
+          <br>
+          <fieldset>
+            <legend>Sélections de tailles :</legend>
+            <ul>
+              <li>
+                <input
+                  type="checkbox"
+                  id="taille-1-2"
+                  name="taille"
+                  value="1-2"
+                >
+                <label for="taille-1-2">1 - 2cm</label>
+              </li>
+              <li>
+                <input
+                  type="checkbox"
+                  id="taille-2-3"
+                  name="taille"
+                  value="2-3"
+                >
+                <label for="taille-2-3">2 - 3cm</label>
+              </li>
+              <li>
+                <input
+                  type="checkbox"
+                  id="taille-3-4"
+                  name="taille"
+                  value="3-4"
+                >
+                <label for="taille-3-4">3 - 4cm</label>
+              </li>
+              <li>
+                <input
+                  type="checkbox"
+                  id="taille-4-6"
+                  name="taille"
+                  value="4-6"
+                >
+                <label for="taille-4-6">4 - 6cm</label>
+              </li>
+              <li>
+                <input
+                  type="checkbox"
+                  id="taille-8-10"
+                  name="taille"
+                  value="8-10"
+                >
+                <label for="taille-8-10">8 - 10cm</label>
+              </li>
+              <li>
+                <input
+                  type="checkbox"
+                  id="taille-10-12"
+                  name="taille"
+                  value="10-12"
+                >
+                <label for="taille-10-12">10 - 12cm</label>
+              </li>
+            </ul>
+          </fieldset>
+        </details>
+        <div class="filter-certification-section">
+          <label for="certifie">Certification</label>
+          <input type="checkbox" id="certifie" name="certifie" >
+        </div>
+        <div class="filter-favorite-section">
+          <label for="favorite">Favoris de Stampee</label>
+          <input type="checkbox" id="favorite" name="favorite" >
+        </div>
+      </form>
+    </aside>
+  </div>
+  <div class="grid-container">
+    <input type="checkbox" id="sort-toggle" class="sort-toggle" aria-label="Sort-toggle">
+    <div class="horizontal-bar">
+      <div class="section">
+        <span>Affichage :</span>
+        <button class="btn btn-list">Liste</button>
+        <button class="btn btn-grid">Grille</button>
+      </div>
+      <div>
+        <div class="section">
+          <label for="lots-par-page">Lots par page :</label>
+          <select id="lots-par-page" name="lots-par-page">
+            <option value="24">24</option>
+            <option value="48">48</option>
+            <option value="96">96</option>
+            <option value="all">Voir tout</option>
+          </select>
+        </div>
+        <div class="section">
+          <label for="trier">Trier par :</label>
+          <select id="trier" name="trier">
+            <option value="prix-asc">Prix (asc)</option>
+            <option value="prix-desc">Prix (desc)</option>
+            <option value="nom-asc">Nom (asc)</option>
+            <option value="nom-desc">Nom (desc)</option>
+            <option value="nom-desc"># Lot (asc)</option>
+            <option value="nom-desc"># Lot (desc)</option>
+            <option value="nom-desc">Temps restant (asc)</option>
+            <option value="nom-desc">Temps restant (desc)</option>
+            <option value="nom-desc">Populaire</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="filter-selections">
+      <span class="lots">118 lots:</span>
+      <span class="filter-selection"
+        >$120-$500 <button class="btn-close">x</button>
+      </span>
+      <span class="filter-selection"
+        >Certifié <button class="btn-close">x</button>
+      </span>
+    </div>
+    <div class="grid">
+    {% for enchere in encheres %}
+      <div class="card">
+        <div class="card-image-container">
+          <a href="enchere?enchere_id={{ enchere.enchere_id }}" class="card-image-link">
+            <img
+              src="medias/image_principale/{{ enchere.timbre_image_principale }}.webp"
+              alt="image de Bloc de quatre du Canal du Saint-Laurent avec centre
+              inversé"
+              class="card-image"
+            >
+          </a>
+        </div>
+        <div class="card-details">
+          <div class="card-lot-number">
+            #{{ enchere.enchere_id }}
+            <div>
+              <svg
+                width="22"
+                height="20"
+                viewBox="0 0 22 20"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <title>Favoris</title>
+                <desc>Icône de coeur pour les items favoris</desc>
+                <path
+                  d="M10.9995 2.40848C9.93906 1.5305 8.55717 1 7.04516 1C3.70648 1 1 3.58934 1 6.78445C1 8.22824 1.55256 9.54846 2.46735 10.5612L11.0092 18.7333L19.3802 10.7247C20.3853 9.69246 21 8.30721 21 6.78445C21 3.59027 18.2935 1 14.9539 1C13.4419 1 12.06 1.5305 10.9995 2.40848Z"
+                  stroke="#6E6E6E"
+                  stroke-width=".5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </div>
+          </div>
+          <a class="card-title" href=""enchere?enchere_id={{ enchere.enchere_id }}""
+            ><h2>
+              {{ enchere.timbre_nom }}
+            </h2></a
+          >
+          <div class="card-price">
+            C$ {% if enchere.offre_actuelle is not null %}{{ enchere.offre_actuelle }}{% else %}0{% endif %} <span class="card-bid-count">({{ enchere.nb_mises }} mises)</span>
+          </div>
+          <div class="card-time-left">{{ enchere.temps_restant }}</div>
+        </div>
+      </div>
+    {% else %}
+      <div>Aucune enchère.</div>
+    {% endfor %}
+    </div>
+    <div class="pagination-wrapper">
+      <div class="pagination">
+        <button class="prev-btn">
+          <svg
+            width="8"
+            height="15"
+            viewBox="0 0 8 15"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M6.45722 1.9582L1.44331 6.9148C0.85117 7.50016 0.851169 8.45803 1.44331 9.04339L6.45721 14"
+              stroke="rgba(110, 110, 110, 1)"
+              stroke-width="2"
+              stroke-miterlimit="10"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+          Précédent
+        </button>
+        <div class="pages">
+          <a href="#" class="active">1</a>
+          <a href="#">2</a>
+          <a href="#">3</a>
+          <a href="#">4</a>
+          <a href="#">5</a>
+        </div>
+        <button class="next-btn">
+          Suivant
+          <svg
+            width="8"
+            height="15"
+            viewBox="0 0 8 15"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M1.44331 1.95661L6.45722 6.91321C7.04936 7.49857 7.04936 8.45644 6.45722 9.0418L1.44331 14"
+              stroke="black"
+              stroke-width="2"
+              stroke-miterlimit="10"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

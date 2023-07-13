@@ -1,0 +1,17 @@
+:root {
+  --couleur-accent: rgba(38, 54, 154, 1);
+  --couleur-gris-tres-fonce: #333;
+  --couleur-gris-fonce: rgba(110, 110, 110, 1);
+  --couleur-gris-pale: rgba(244, 244, 244, 1);
+  
+  --espace-tres-petit: 0.25rem;
+  --espace-petit: 0.5rem;
+  --espace-moyen: 1rem;
+  --espace-grand: 2rem;
+  --espace-tresgrand: 3rem;
+
+  --gouttiere-moyen: var(--espace-moyen);
+  --gouttiere-grand: var(--espace-grand);
+
+  --colonne: 30ch;
+}

@@ -1,0 +1,53 @@
+.lord-stampee {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 50px;
+  gap: 2rem;
+}
+ .lord-stampee-image {
+  max-width: 50%;
+  flex-grow: 1;
+  flex-basis: 250px;
+}
+ .lord-stampee-image img {
+  /* width: 100%; */
+  /* height: auto; */
+  max-width: 100%;
+}
+ .lord-stampee-content {
+  width: 50%;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  line-height: 150%;
+}
+ .lord-stampee-title {
+  font-family: "Garamond";
+  color: var(--couleur-accent);
+  font-size: 32px;
+  margin-bottom: 20px;
+}
+ .lord-stampee-description {
+  font-size: 16px;
+  margin-bottom: 20px;
+}
+ .lord-stampee-subtitle {
+  font-family: "Garamond";
+  color: var(--couleur-accent);
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+ .lord-stampee-button {
+  background-color: #007bff;
+  color: #fff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+}
+ .lord-stampee-button:hover {
+  background-color: #0062cc;
+}

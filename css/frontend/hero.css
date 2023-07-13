@@ -1,0 +1,52 @@
+.hero-image {
+  background-size: cover;
+  background-position: center;
+  height: 100vh;
+  position: relative;
+	align-items: center;
+	justify-content: center;
+}
+.hero-image-1 {
+	background-image: url("../../medias/cover/home-hero-1.webp");
+}
+.hero-image-2 {
+	background-image: url("../../medias/cover/home-hero-2.webp");
+}
+.hero-image-1.hero-image::before {
+	background: linear-gradient(to bottom, transparent 33%, white);
+}
+.hero-image-2.hero-image::before {
+	background: linear-gradient(to top, transparent 33%, white);
+}
+
+.hero-image::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.hero-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  font-family: "EB Garamond", serif;
+  color: rgba(38, 54, 154, 1);
+
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: var(--gouttiere-moyen);
+}
+.hero-text h1 {
+  font-size: 80px;
+  margin: 0;
+}
+.hero-text p {
+  font-size: 32px;
+  margin: 0;
+}

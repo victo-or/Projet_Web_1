@@ -1,0 +1,118 @@
+
+.menu-toggle {
+    z-index: 10000;
+    position: sticky;
+    top: 0;
+    margin-left: auto;
+    background-color: white;
+    cursor: pointer;
+}
+
+  @media (max-width: 800px) {
+    * {
+        font-size: 14px;
+    }
+    .menu-toggle input[type="checkbox"] {
+      /* position: sticky;
+      top: var(--espace-petit); */
+      display: block;
+    }
+  
+    .menu-toggle:not(:checked)+nav {
+      opacity: 0;
+      position: fixed;
+      pointer-events: none;
+    }
+
+    .filter-toggle input[type="checkbox"] {
+        display: block;
+        }
+    .filter-toggle:not(:checked)+aside {
+        opacity: 0;
+        position: fixed;
+        pointer-events: none;
+    }
+    .sort-toggle input[type="checkbox"] {
+        display: block;
+        }
+    .sort-toggle:not(:checked)+div.horizontal-bar {
+        opacity: 0;
+        position: fixed;
+        pointer-events: none;
+    }
+  }
+  
+  /* -- fenêtre large */
+@media (min-width: 800px) {
+    .filter-toggle,
+    .sort-toggle,
+	.menu-toggle {
+		display: none;
+	}
+}
+
+/*
+	(composante) --------------- */
+
+    .menu-toggle {
+        appearance: none;
+        padding: var(--espace-petit);
+    }
+    
+    .menu-toggle:not(:checked)::before {
+        content: "ouvrir";
+    }
+    
+    .menu-toggle:checked::before {
+        content: "fermer";
+    }
+    
+    /* Pour filtres */
+
+    .filter-toggle {
+        appearance: none;
+        border: .25px solid black;
+        padding: var(--espace-petit);
+        min-width: 50vw;
+        text-align: center;
+        z-index: 10000;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        margin-right: auto;
+        background-color: white;
+        cursor: pointer;
+    }
+
+    .filter-toggle:not(:checked)::before {
+        content: "Filtrer";
+    }
+
+    .filter-toggle:checked::before {
+        content: "Fermer";
+    }
+
+    /* Pour trier */
+
+    .sort-toggle {
+        appearance: none;
+        border: .25px solid black;
+        padding: var(--espace-petit);
+        min-width: 50vw;
+        text-align: center;
+        z-index: 100;
+        position: fixed;
+        bottom: 0;
+        right: 0;
+        margin-left: auto;
+        background-color: white;
+        cursor: pointer;
+    }
+
+    .sort-toggle:not(:checked)::before {
+        content: "Trier";
+    }
+
+    .sort-toggle:checked::before {
+        content: "Fermer";
+    }

@@ -1,0 +1,138 @@
+button {
+  width: fit-content;
+  display: inline;
+  cursor: pointer;
+}
+
+/* button avec svg */
+.btn-icon {
+  background: none;
+  border: none;
+  color: inherit;
+  font: inherit;
+  line-height: normal;
+  overflow: visible;
+}
+
+/* button avec fleche */
+.btn-arrow {
+  transition: gap 0.3s ease-in-out;
+  font-family: "EB Garamond";
+  font-style: italic;
+  gap: 0.5rem;
+}
+.btn-arrow:hover {
+  gap: 2rem;
+}
+  
+  
+
+/* button defaut rectangle */
+.btn-rectangle {
+  display: flex;
+  align-items: center;
+  justify-items: center;
+  font-weight: 600;
+  font-size: 1rem;
+  text-transform: uppercase;
+  background-color: white;
+  padding: var(--espace-petit);
+  border: 0.5px solid var(--couleur-accent);
+  border-radius: 2px;
+  color: var(--couleur-accent);
+  box-shadow: none;
+}
+
+
+/* button fixed (sans fleche) */
+.btn-fixed {
+  font-family: inherit;
+}
+.btn-fixed:hover {
+  color: #ffffff;
+  background-color: var(--couleur-accent);
+  transition: color 300ms, background-color 300ms;
+}
+
+/* pour centrer le svg dans le bouton (note: j'aurais pu mettre dans button-fixed, mais ça brisait la loupe pour recherche)*/
+.btn-centered {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Container pour centrer le bouton sur la page */
+.btn-container {
+  display: flex;
+  justify-content: center;
+}
+
+
+/* button dans grille de catalogue et filtre */
+.btn {
+  border: none;
+  padding: 5px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-right: 10px;
+}
+.btn-grid {
+  background-color: var(--couleur-gris-fonce);
+  color: white;
+  
+}
+.btn-list {
+  background-color: var(--couleur-gris-pale);
+  color: inherit;
+}
+
+/* button x dans les filter selections */
+.btn-close {
+  background-color: transparent;
+  border: none;
+  color: var(--couleur-gris-tres-fonce);
+  font-size: 12px;
+  cursor: pointer;
+  margin-left: 5px;
+}
+
+.btn-reset {
+  background-color: var(--couleur-gris-pale);
+  border: none;
+  color: var(--couleur-gris-tres-fonce);
+  font-size: 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  padding: 5px;
+  border-radius: 2px;
+}
+.btn-reset svg {
+  margin-left: 5px;
+}
+
+.scroll-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: white;
+  border: none;
+  outline: none;
+  color: #999;
+  cursor: pointer;
+
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  z-index: 100; 
+}
+.scroll-btn:hover {
+  background-color: white;
+  border: 1px var(--couleur-accent) solid;
+}
+.scroll-left-button {
+  left: 0;
+}
+.scroll-right-button {
+  right: 0;
+}
