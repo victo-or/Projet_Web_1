@@ -1,0 +1,70 @@
+{# 
+
+<section>
+  <h1>{{ titre|upper }}</h1>
+  <a href="profil?entite=enchere&action=a">Ajouter une enchere</a>
+  <p class="messageRetourAction {{ classeRetourAction }}">{{ messageRetourAction }}&nbsp;</p>
+  <div class="g auteurs">
+    <div class="t">Id</div>
+    <div class="t">Nom</div>
+    <div class="t">Nb livres</div>
+    <div class="t">Actions</div>
+    {% for enchere in mesEncheres %}
+    <div class="l">
+      <div class="c dr">{{ enchere.enchere_id }}</div>
+      <div class="c   ">{{ enchere.enchere_nom }}, {{ enchere.enchere_prenom }}</div>
+      <div class="c dr">{{ enchere.nb_livres }}</div>
+      <div class="c">
+        <a href="profil?entite=enchere&action=m&enchere_id={{ enchere.enchere_id }}">modifier</a>
+        {% if not enchere.nb_livres %}
+        <span class="supprimer" data-href="profil?entite=enchere&action=s&enchere_id={{ enchere.enchere_id }}">supprimer</span>
+        {% endif %}
+      </div>
+    </div>  
+    {% endfor %}
+  </div>
+</section>
+ #}
+
+<script> history.pushState({}, '', 'profil?entite=enchere&action=l') </script>
+
+<section class="profil-mes-encheres">
+    <h2>{{ titre|upper }}</h2>
+    <a href="profil?entite=enchere&action=a">Ajouter une enchere</a>
+    <p class="messageRetourAction {{ classeRetourAction }}">{{ messageRetourAction }}&nbsp;</p>
+
+    {% if mesEncheres is empty %}
+        <p>Aucune enchère.</p>
+    {% else %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Timbre</th>
+                    <th>Date de début</th>
+                    <th>Date de fin</th>
+                    <th>Prix actuel</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for enchere in mesEncheres %}
+                    <tr>
+                        <td>{{ enchere.timbre_nom }}</td>
+                        <td>{{ enchere.enchere_date_debut }}</td>
+                        <td>{{ enchere.enchere_date_fin }}</td>
+                        <td>{{ enchere.offre_actuelle|default(enchere.enchere_prix_plancher) }}$</td>
+                        <td>
+                            <a href="profil?entite=enchere&action=m&enchere_id={{ enchere.enchere_id }}">modifier</a>
+                            <a href="profil?entite=enchere&action=s&enchere_id={{ enchere.enchere_id }}">supprimer</a>
+                            {# <span class="supprimer" data-href="profil?entite=enchere&action=s&enchere_id={{ enchere.enchere_id }}">supprimer</span> #}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+</section>
+
+
+
+{{ include("modaleSuppression.twig") }}

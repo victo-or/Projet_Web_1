@@ -14,10 +14,10 @@ class Routeur {
     ["catalogue",     "Frontend", "listerEncheres"],
     ["enchere",       "Frontend", "voirEnchere"],
     ["connecter",     "Frontend", "connecter"],
-    ["profil",        "Frontend", "voirProfil"],
+    ["profil",        "Frontend", "gererProfil"],
     ["creerCompte",   "Frontend", "creerCompte"],
     ["deconnecter",   "Frontend", "deconnecter"],
-    ["ajouter",       "Frontend", "ajouterEnchere"],
+    // ["ajouter",       "Frontend", "ajouterEnchere"],
     ["miser",         "Frontend", "miser"]
   ];
 

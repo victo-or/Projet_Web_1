@@ -1,0 +1,107 @@
+<section class="formulaire-ajout">
+    <h1>{{ titre|upper }}</h1>
+    
+    <form method="POST" action="profil?entite=enchere&action=a">
+        <label>Titre</label>
+        <input name="timbre[timbre_nom]" value="{{ donneesFormulaire.timbre.timbre_nom }}">
+        <span class="formulaire-erreur">&nbsp;{{ erreursTimbre.timbre_nom }}</span>
+
+        <label>Date du début de l'enchère</label>
+        <input name="enchere[enchere_date_debut]" value="{{ donneesFormulaire.enchere.enchere_date_debut }}" placeholder="aaaa-mm-jj hh:mm:ss">
+        <span class="formulaire-erreur">&nbsp;{{ erreursEnchere.enchere_date_debut }}</span>
+
+        <label>Date de fin de l'enchère</label>
+        <input name="enchere[enchere_date_fin]" value="{{ donneesFormulaire.enchere.enchere_date_fin }}" placeholder="aaaa-mm-jj hh:mm:ss">
+        <span class="formulaire-erreur">&nbsp;{{ erreursEnchere.enchere_date_fin }}</span>
+
+        <label>Prix de plancher</label>
+        <input type="number" step="0.01" min="0.01" name="enchere[enchere_prix_plancher]" value="{{ donneesFormulaire.enchere.enchere_prix_plancher }}">
+        <span class="formulaire-erreur">&nbsp;{{ erreursEnchere.enchere_prix_plancher }}</span>
+
+        <label>Date de création du timbre</label>
+        <input type="date" name="timbre[timbre_date_creation]" value="{{ donneesFormulaire.timbre.timbre_date_creation }}">
+        <span class="formulaire-erreur">&nbsp;{{ erreursTimbre.timbre_date_creation }}</span>
+
+        <label>Condition du timbre</label>
+        <select name="timbre[timbre_condition]">
+            <option disabled selected>Choisir une option</option>
+            <option value="parfaite" {% if donneesFormulaire.timbre.timbre_condition == 'parfaite' %}selected{% endif %}>Parfaite</option>
+            <option value="excellente" {% if donneesFormulaire.timbre.timbre_condition == 'excellente' %}selected{% endif %}>Excellente</option>
+            <option value="bonne" {% if donneesFormulaire.timbre.timbre_condition == 'bonne' %}selected{% endif %}>Bonne</option>
+            <option value="moyenne" {% if donneesFormulaire.timbre.timbre_condition == 'moyenne' %}selected{% endif %}>Moyenne</option>
+            <option value="endommage" {% if donneesFormulaire.timbre.timbre_condition == 'endommage' %}selected{% endif %}>Endommagé</option>
+        </select>
+        <span class="formulaire-erreur">&nbsp;{{ erreursTimbre.timbre_condition }}</span>
+
+        <label for="timbre_pays">Pays du timbre :</label>
+        <select id="timbre_pays" name="timbre[timbre_pays]">
+        <option disabled selected>Choisir un pays</option>
+        {% for pays in listePays %}
+            <option value="{{ pays }}" {% if pays == donneesFormulaire.timbre.timbre_pays %}selected{% endif %}>{{ pays }}</option>
+        {% endfor %}
+        </select>
+        <span class="formulaire-erreur">&nbsp;{{ erreursTimbre.timbre_pays }}</span>
+
+        <label>Tirage du timbre</label>
+        <input name="timbre[timbre_tirage]" value="{{ donneesFormulaire.timbre.timbre_tirage }}">
+        <span class="formulaire-erreur">&nbsp;{{ erreursTimbre.timbre_tirage }}</span>
+
+        <label>Longueur du timbre</label>
+        <div class="dimensions">
+            <input type="number" step="0.01" min="0.01" name="timbre[timbre_longueur]" value="{{ donneesFormulaire.timbre.timbre_longueur }}">
+            <span class="unit">cm</span>
+        </div>
+        <span class="formulaire-erreur">&nbsp;{{ erreursTimbre.timbre_longueur }}</span>
+
+        <label>Largeur du timbre</label>
+        <div class="dimensions">
+            <input type="number" step="0.01" min="0.01" name="timbre[timbre_largeur]" value="{{ donneesFormulaire.timbre.timbre_largeur }}">
+            <span class="unit">cm</span>
+        </div>
+        <span class="formulaire-erreur">&nbsp;{{ erreursTimbre.timbre_largeur }}</span>
+
+        <label>Certifié</label>
+        <input type="checkbox" name="timbre[timbre_certifie]" {% if donneesFormulaire.timbre.timbre_certifie %}checked{% endif %} value="1">
+        <span class="formulaire-erreur">&nbsp;{{ erreursTimbre.timbre_certifie }}</span>
+
+        <label>Description du timbre</label>
+        <textarea name="timbre[timbre_description]">{{ donneesFormulaire.timbre.timbre_description }}</textarea>
+        <span class="formulaire-erreur">&nbsp;{{ erreursTimbre.timbre_description }}</span>
+
+        <label>Couleur du timbre</label>
+        <select name="timbre[timbre_couleur]">
+            <option disabled selected>Choisir une option</option>
+            <option value="rouge" {% if 'rouge' in donneesFormulaire.timbre.timbre_couleur %}selected{% endif %}>Rouge</option>
+            <option value="orange" {% if 'orange' in donneesFormulaire.timbre.timbre_couleur %}selected{% endif %}>Orange</option>
+            <option value="jaune" {% if 'jaune' in donneesFormulaire.timbre.timbre_couleur %}selected{% endif %}>Jaune</option>
+            <option value="vert" {% if 'vert' in donneesFormulaire.timbre.timbre_couleur %}selected{% endif %}>Vert</option>
+            <option value="bleu" {% if 'bleu' in donneesFormulaire.timbre.timbre_couleur %}selected{% endif %}>Bleu</option>
+            <option value="mauve" {% if 'mauve' in donneesFormulaire.timbre.timbre_couleur %}selected{% endif %}>Mauve</option>
+            <option value="rose" {% if 'rose' in donneesFormulaire.timbre.timbre_couleur %}selected{% endif %}>Rose</option>
+            <option value="multicolore" {% if 'multicolore' in donneesFormulaire.timbre.timbre_couleur %}selected{% endif %}>Multicolore</option>
+            <option value="noir/blanc" {% if 'noir/blanc' in donneesFormulaire.timbre.timbre_couleur %}selected{% endif %}>Noir/Blanc</option>
+            <option value="gris" {% if 'gris' in donneesFormulaire.timbre.timbre_couleur %}selected{% endif %}>Gris</option>
+            <option value="brun" {% if 'brun' in donneesFormulaire.timbre.timbre_couleur %}selected{% endif %}>Brun</option>
+            <option value="beige" {% if 'beige' in donneesFormulaire.timbre.timbre_couleur %}selected{% endif %}>Beige</option>
+            <option value="or" {% if 'or' in donneesFormulaire.timbre.timbre_couleur %}selected{% endif %}>Or</option>
+            <option value="argent" {% if 'argent' in donneesFormulaire.timbre.timbre_couleur %}selected{% endif %}>Argent</option>
+        </select>
+        <span class="formulaire-erreur">&nbsp;{{ erreursTimbre.timbre_couleur }}</span>
+
+        <label>Image principale du timbre en jpg ou webp</label>
+        <input type="file" name="timbre_image_principale">
+        <span>&nbsp;{{ erreursTimbre.timbre_image_principale }}</span>
+
+        <label>Images supplémentaires du timbre en jpg ou webp</label>
+        <div id="images-container">
+            <input type="file" name="image_fichier[]" class="image-supplementaire">
+            <input type="file" name="image_fichier[]" class="image-supplementaire">
+            <input type="file" name="image_fichier[]" class="image-supplementaire">
+            <input type="file" name="image_fichier[]" class="image-supplementaire">
+            <input type="file" name="image_fichier[]" class="image-supplementaire">
+        </div>
+        <span class="formulaire-erreur">&nbsp;{{ erreursTimbre.image_fichier }}</span>
+
+        <input type="submit" value="Envoyer">
+    </form>
+</section>

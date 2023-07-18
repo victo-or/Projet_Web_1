@@ -79,7 +79,7 @@ CREATE TABLE `mise` (
   `id_utilisateur` INT NOT NULL,
   `id_enchere` BIGINT NOT NULL,
   `mise_montant` DECIMAL(7,2) NOT NULL,
-  `mise_date` DATETIME NOT NULL,
+  `mise_date` DATETIME DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`mise_id`)
 );
 

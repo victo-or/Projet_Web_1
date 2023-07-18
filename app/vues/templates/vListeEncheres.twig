@@ -603,7 +603,7 @@
             </h2></a
           >
           <div class="card-price">
-            C$ {% if enchere.offre_actuelle is not null %}{{ enchere.offre_actuelle }}{% else %}0{% endif %} <span class="card-bid-count">({{ enchere.nb_mises }} mises)</span>
+            C$ {% if enchere.offre_actuelle is not null %}{{ enchere.offre_actuelle }}{% else %}{{ enchere.enchere_prix_plancher }}{% endif %} <span class="card-bid-count">({{ enchere.nb_mises }} mises)</span>
           </div>
           <div class="card-time-left">{{ enchere.temps_restant }}</div>
         </div>

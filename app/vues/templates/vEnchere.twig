@@ -13,11 +13,21 @@
     </div>
     <div class="offre">
       <span class="label">Offre actuelle :</span>
-      C$ {% if enchere.offre_actuelle is not null %}{{ enchere.offre_actuelle }}{% else %}0{% endif %}
+      C$ {% if enchere.offre_actuelle is not null %}{{ enchere.offre_actuelle }}{% else %}{{ enchere.enchere_prix_plancher }}{% endif %}
       <span class="label">Nombre de mises :</span> {{ enchere.nb_mises }}
     </div>
+
+    <form action="miser?enchere_id={{ enchere.enchere_id }}" method="POST">
+      <label for="prix">Prix :</label>
+      <input type="number" step="0.01" min="{{ enchere.offre_actuelle|default(enchere.enchere_prix_plancher) }}" name="mise_montant" id="prix" value="{{ enchere.offre_actuelle|default(enchere.enchere_prix_plancher) }}">
+      <input type="hidden" name="valeur_minimale" value="{{ enchere.offre_actuelle|default(enchere.enchere_prix_plancher) }}">
+      <button type="submit">Miser</button>
+      <span class="formulaire-erreur">&nbsp;{{ erreurs.mise_montant }}</span>
+      <p class="messageRetourAction {{ classRetour }}">{{ messageRetourAction }}&nbsp;</p> 
+   </form>
+
     <div class="vendeur">
-      <span class="label">Vendeur :</span> {{ enchere.pseudo }}
+      <span class="label">Vendeur :</span> {{ enchere.utilisateur_pseudo }}
     </div>
     <div class="timbre">
       <span class="label">Nom :</span> {{ enchere.timbre_nom }}<br>

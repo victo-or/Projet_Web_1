@@ -7,21 +7,22 @@
 class Enchere extends Entite
 {
   protected $enchere_id;
-  protected $enchere_titre;
-  protected $enchere_duree;
-  protected $enchere_annee_sortie;
-  protected $enchere_resume;
-  protected $enchere_affiche;
-  protected $enchere_bande_annonce;
-  protected $enchere_statut;
-  protected $enchere_genre_id;
+  protected $id_vendeur;
+  protected $id_timbre;
+  protected $enchere_date_debut;
+  protected $enchere_date_fin;
+  protected $enchere_cdc_lord;
+  protected $enchere_prix_plancher;
 
-  const ANNEE_PREMIER_FILM = 1895;
-  const DUREE_MIN = 1;
-  const DUREE_MAX = 600;     
-  const STATUT_INVISIBLE = 0;
-  const STATUT_VISIBLE   = 1;
-  const STATUT_ARCHIVE   = 2;
+  /**
+   * Constructeur de la classe 
+   * @param array $proprietes, tableau associatif des propriétés 
+   */ 
+  public function __construct($proprietes = []) {
+    foreach ($proprietes as $nom_propriete => $val_propriete) {
+    $this->__set($nom_propriete, $val_propriete);
+    } 
+  }
 
   /**
    * Mutateur de la propriété enchere_id 
@@ -32,134 +33,125 @@ class Enchere extends Entite
     unset($this->erreurs['enchere_id']);
     $regExp = '/^[1-9]\d*$/';
     if (!preg_match($regExp, $enchere_id)) {
-      $this->erreurs['enchere_id'] = 'Numéro de enchere incorrect.';
+      $this->erreurs['enchere_id'] = "Numéro d'enchere incorrect.";
     }
     $this->enchere_id = $enchere_id;
     return $this;
   }    
 
   /**
-   * Mutateur de la propriété enchere_titre 
-   * @param string $enchere_titre
+   * Mutateur de la propriété id_vendeur 
+   * @param int $id_vendeur
    * @return $this
    */    
-  public function setEnchere_titre($enchere_titre) {
-    unset($this->erreurs['enchere_titre']);
-    $enchere_titre = trim($enchere_titre);
-    $regExp = '/^.+$/';
-    if (!preg_match($regExp, $enchere_titre)) {
-      $this->erreurs['enchere_titre'] = 'Au moins un caractère.';
-    }
-    $this->enchere_titre = mb_strtoupper($enchere_titre);
-    return $this;
-  }
-
-  /**
-   * Mutateur de la propriété enchere_duree 
-   * @param int $enchere_duree, en minutes
-   * @return $this
-   */        
-  public function setEnchere_duree($enchere_duree) {
-    unset($this->erreurs['enchere_duree']);
-    if (!preg_match('/^[1-9]\d*$/', $enchere_duree) || $enchere_duree < self::DUREE_MIN || $enchere_duree > self::DUREE_MAX) {
-      $this->erreurs['enchere_duree'] = "Entre ".self::DUREE_MIN." et ".self::DUREE_MAX.".";
-    }
-    $this->enchere_duree = $enchere_duree;
-    return $this;
-  }
-
-  /**
-   * Mutateur de la propriété enchere_annee_sortie 
-   * @param int $enchere_annee_sortie
-   * @return $this
-   */        
-  public function setEnchere_annee_sortie($enchere_annee_sortie) {
-    unset($this->erreurs['enchere_annee_sortie']);
-    if (!preg_match('/^\d+$/', $enchere_annee_sortie) ||
-        $enchere_annee_sortie < self::ANNEE_PREMIER_FILM  || 
-        $enchere_annee_sortie > date("Y")) {
-      $this->erreurs['enchere_annee_sortie'] = "Entre ".self::ANNEE_PREMIER_FILM." et l'année en cours.";
-    }
-    $this->enchere_annee_sortie = $enchere_annee_sortie;
-    return $this;
-  }
-
-  /**
-   * Mutateur de la propriété enchere_resume
-   * @param string $enchere_resume
-   * @return $this
-   */    
-  public function setEnchere_resume($enchere_resume) {
-    unset($this->erreurs['enchere_resume']);
-    $enchere_resume = trim($enchere_resume);
-    $regExp = '/^\S+(\s+\S+){4,}$/';
-    if (!preg_match($regExp, $enchere_resume)) {
-      $this->erreurs['enchere_resume'] = 'Au moins 5 mots.';
-    }
-    $this->enchere_resume = $enchere_resume;
-    return $this;
-  }
-
-  /**
-   * Mutateur de la propriété enchere_affiche
-   * @param string $enchere_affiche
-   * @return $this
-   */    
-  public function setEnchere_affiche($enchere_affiche) {
-    unset($this->erreurs['enchere_affiche']);
-    $enchere_affiche = trim($enchere_affiche);
-    $regExp = '/^.+\.jpg$/';
-    if (!preg_match($regExp, $enchere_affiche)) {
-      $this->erreurs['enchere_affiche'] = "Vous devez téléverser un fichier de type jpg.";
-    }
-    $this->enchere_affiche = $enchere_affiche;
-    return $this;
-  }
-
-  /**
-   * Mutateur de la propriété enchere_bande_annonce
-   * @param string $enchere_bande_annonce
-   * @return $this
-   */    
-  public function setEnchere_bande_annonce($enchere_bande_annonce) {
-    unset($this->erreurs['enchere_bande_annonce']);
-    $enchere_bande_annonce = trim($enchere_bande_annonce);
-    $regExp = '/^.+\.mp4$/';
-    if (!preg_match($regExp, $enchere_bande_annonce)) {
-      $this->erreurs['enchere_bande_annonce'] = "Vous devez téléverser un fichier de type mp4.";
-    }
-    $this->enchere_bande_annonce = $enchere_bande_annonce;
-    return $this;
-  }
-
-  /**
-   * Mutateur de la propriété enchere_statut
-   * @param int $enchere_statut
-   * @return $this
-   */        
-  public function setEnchere_statut($enchere_statut) {
-    unset($this->erreurs['enchere_statut']);
-    if ($enchere_statut != Enchere::STATUT_INVISIBLE &&
-        $enchere_statut != Enchere::STATUT_VISIBLE   && 
-        $enchere_statut != Enchere::STATUT_ARCHIVE) {
-      $this->erreurs['enchere_statut'] = 'Statut incorrect.';
-    }
-    $this->enchere_statut = $enchere_statut;
-    return $this;
-  }
-
-  /**
-   * Mutateur de la propriété enchere_genre_id 
-   * @param int $enchere_genre_id
-   * @return $this
-   */    
-  public function setEnchere_genre_id($enchere_genre_id) {
-    unset($this->erreurs['enchere_genre_id']);
+  public function setId_vendeur($id_vendeur) {
+    unset($this->erreurs['id_vendeur']);
     $regExp = '/^[1-9]\d*$/';
-    if (!preg_match($regExp, $enchere_genre_id)) {
-      $this->erreurs['enchere_genre_id'] = 'Numéro de genre incorrect.';
+    if (!preg_match($regExp, $id_vendeur)) {
+      $this->erreurs['id_vendeur'] = "Numéro de vendeur incorrect.";
     }
-    $this->enchere_genre_id = $enchere_genre_id;
+    $this->id_vendeur = $id_vendeur;
     return $this;
   }    
+
+  /**
+   * Mutateur de la propriété id_timbre 
+   * @param int $id_timbre
+   * @return $this
+   */    
+  public function setId_timbre($id_timbre) {
+    unset($this->erreurs['id_timbre']);
+    $regExp = '/^[1-9]\d*$/';
+    if (!preg_match($regExp, $id_timbre)) {
+      $this->erreurs['id_timbre'] = "Numéro de timbre incorrect.";
+    }
+    $this->id_timbre = $id_timbre;
+    return $this;
+  }    
+
+  /**
+   * Mutateur de la propriété enchere_date_debut
+   * @param string $enchere_date_debut
+   * @return $this
+   */    
+  public function setEnchere_date_debut($enchere_date_debut) {
+    unset($this->erreurs['enchere_date_debut']);
+    $regExp = '/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/';
+    if (empty($enchere_date_debut)) {
+      $this->erreurs['enchere_date_debut'] = "Saisie obligatoire.";
+    }
+    else if (!preg_match($regExp, $enchere_date_debut)) {
+      $this->erreurs['enchere_date_debut'] = "Format de date incorrect. L'entrée doit être dans le format aaaa-mm-jj hh-mm-ss";
+    } else {
+      $dateDebut = new DateTime($enchere_date_debut);
+      $dateFin = new DateTime($this->enchere_date_fin);
+      $diff = $dateFin->diff($dateDebut);
+      if ($diff->d < 1) {
+        $this->erreurs['enchere_date_debut'] = "La date de début doit être au moins d'un jour après la date actuelle.";
+      }
+    }
+    $this->enchere_date_debut = $enchere_date_debut;
+    return $this;
+  }
+
+  /**
+   * Mutateur de la propriété enchere_date_fin
+   * @param string $enchere_date_fin
+   * @return $this
+   */    
+  public function setEnchere_date_fin($enchere_date_fin) {
+    unset($this->erreurs['enchere_date_fin']);
+    $regExp = '/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/';
+    if (empty($enchere_date_fin)) {
+      $this->erreurs['enchere_date_fin'] = "Saisie obligatoire.";
+    }
+    else if (!preg_match($regExp, $enchere_date_fin)) {
+      $this->erreurs['enchere_date_fin'] = "Format de date incorrect. L'entrée doit être dans le format aaaa-mm-jj hh-mm-ss";
+    } else {
+      $dateFin = new DateTime($enchere_date_fin);
+      $dateDebut = new DateTime($this->enchere_date_debut);
+      $diff = $dateFin->diff($dateDebut);
+      if ($diff->d > 7) {
+        $this->erreurs['enchere_date_fin'] = "La date de fin ne peut pas dépasser sept jours après la date de début.";
+      }
+    }
+    $this->enchere_date_fin = $enchere_date_fin;
+    return $this;
+  }
+
+
+  /**
+   * Mutateur de la propriété enchere_cdc_lord
+   * @param int $enchere_cdc_lord
+   * @return $this
+   */    
+  public function setEnchere_cdc_lord($enchere_cdc_lord) {
+    unset($this->erreurs['enchere_cdc_lord']);
+    if ($enchere_cdc_lord !== 0 && $enchere_cdc_lord !== 1) {
+        $this->erreurs['enchere_cdc_lord'] = "La valeur de enchere_cdc_lord doit être 0 ou 1.";
+    }
+    $this->enchere_cdc_lord = $enchere_cdc_lord;
+    return $this;
+  }
+
+
+  /**
+   * Mutateur de la propriété enchere_prix_plancher
+   * @param float $enchere_prix_plancher
+   * @return $this
+   */    
+  public function setEnchere_prix_plancher($enchere_prix_plancher) {
+    unset($this->erreurs['enchere_prix_plancher']);
+    $regExp = '/^\d{1,7}(\.\d{1,2})?$/';
+    if (empty($enchere_prix_plancher)) {
+      $this->erreurs['enchere_prix_plancher'] = "Saisie obligatoire.";
+    }
+    else if (!preg_match($regExp, $enchere_prix_plancher)) {
+        $this->erreurs['enchere_prix_plancher'] = "Le prix plancher de l'enchère doit être un nombre valide (maximum 9 chiffres au total, avec 2 chiffres après la virgule).";
+    }
+    $this->enchere_prix_plancher = $enchere_prix_plancher;
+    return $this;
+  }
+
+
 }

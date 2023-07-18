@@ -14,7 +14,7 @@ class RequetesSQL extends RequetesPDO {
     $this->sql = '
     SELECT
       enchere.*,
-      mise.mise_montant AS offre_actuelle,
+      MAX(mise.mise_montant) AS offre_actuelle,
       COUNT(mise.mise_id) AS nb_mises,
       timbre.*,
       DATE_FORMAT(TIMEDIFF(enchere_date_fin, NOW()), "%d jours, %H heures, %i minutes") AS temps_restant
@@ -26,6 +26,34 @@ class RequetesSQL extends RequetesPDO {
     GROUP BY enchere_id';
     return $this->getLignes();
   }
+  // /**
+  //  * Récupération des encheres à afficher dans la page catalogue
+  //  * @return array tableau des lignes produites par la select   
+  //  */ 
+  // public function getEncheres() {
+  //   $this->sql = '
+  //   SELECT
+  //     enchere.*,
+  //     (
+  //       SELECT MAX(mise_montant)
+  //       FROM mise
+  //       WHERE id_enchere = enchere.enchere_id
+  //     ) AS offre_actuelle,
+  //     (
+  //       SELECT COUNT(mise_id)
+  //       FROM mise
+  //       WHERE id_enchere = enchere.enchere_id
+  //     ) AS nb_mises,
+  //     timbre.*,
+  //     DATE_FORMAT(TIMEDIFF(enchere_date_fin, NOW()), "%d jours, %H heures, %i minutes") AS temps_restant
+  //   FROM
+  //     enchere
+  //   INNER JOIN timbre ON timbre_id = enchere.id_timbre
+  //   WHERE TIMEDIFF(enchere_date_fin, NOW()) > 0
+  //   GROUP BY enchere_id';
+  //   return $this->getLignes();
+  // }
+
 
   /**
    * Récupération d'une enchere
@@ -38,7 +66,7 @@ class RequetesSQL extends RequetesPDO {
       enchere.*, 
       timbre.*, 
       utilisateur.utilisateur_pseudo,
-      mise.mise_montant AS offre_actuelle,
+      MAX(mise.mise_montant) AS offre_actuelle,
       COUNT(mise.mise_id) AS nb_mises,
       DATE_FORMAT(TIMEDIFF(enchere.enchere_date_fin, NOW()), '%d jours, %H heures, %i minutes') AS temps_restant
     FROM enchere
@@ -49,6 +77,28 @@ class RequetesSQL extends RequetesPDO {
 
     return $this->getLignes(['enchere_id' => $enchere_id], RequetesPDO::UNE_SEULE_LIGNE);
   }
+  // /**
+  //  * Récupération d'une enchere
+  //  * @param int $enchere_id, clé de l'enchère
+  //  * @return array|false tableau associatif de la ligne produite par la select, false si aucune ligne  
+  //  */ 
+  // public function getEnchere($enchere_id) {
+  //   $this->sql = "
+  //   SELECT 
+  //     enchere.*, 
+  //     timbre.*, 
+  //     utilisateur.utilisateur_pseudo,
+  //     mise.mise_montant AS offre_actuelle,
+  //     COUNT(mise.mise_id) AS nb_mises,
+  //     DATE_FORMAT(TIMEDIFF(enchere.enchere_date_fin, NOW()), '%d jours, %H heures, %i minutes') AS temps_restant
+  //   FROM enchere
+  //   INNER JOIN timbre ON enchere.id_timbre = timbre.timbre_id
+  //   INNER JOIN utilisateur ON enchere.id_vendeur = utilisateur.utilisateur_id
+  //   LEFT JOIN mise ON mise.id_enchere = enchere.enchere_id
+  //   WHERE enchere.enchere_id = :enchere_id";
+
+  //   return $this->getLignes(['enchere_id' => $enchere_id], RequetesPDO::UNE_SEULE_LIGNE);
+  // }
 
   /**
    * Récupération des images supplémentaires à afficher dans la fiche d'enchère
@@ -124,6 +174,159 @@ class RequetesSQL extends RequetesPDO {
       utilisateur_courriel       = :utilisateur_courriel,
       utilisateur_mdp            = SHA2(:nouveau_mdp, 512),
       utilisateur_profil         = "'.Utilisateur::PROFIL_CLIENT.'"';
+    return $this->CUDLigne($champs);
+  }
+
+
+  // GESTION PROFIL ====================================================
+  // ===================================================================
+
+  /**
+   * Récupération de toutes les enchères de l'utilisateur
+   * @param int $utilisateur_id ID de l'utilisateur
+   * @return array Tableau des lignes produites par la requête SELECT
+   */ 
+  public function getMesEncheres($utilisateur_id) {
+    $this->sql = '
+        SELECT 
+            enchere.*,
+            mise.mise_montant AS offre_actuelle,
+            COUNT(mise.mise_id) AS nb_mises,
+            timbre.*
+        FROM enchere
+        INNER JOIN timbre ON enchere.id_timbre = timbre.timbre_id
+        LEFT JOIN mise ON mise.id_enchere = enchere_id
+        WHERE id_vendeur = :utilisateur_id';
+    return $this->getLignes(['utilisateur_id' => $utilisateur_id]);
+  }
+
+
+  /**
+   * Ajouter un timbre et une enchère
+   * @param array $champs tableau des champs du timbre et de l'enchère
+   * @return int|string clé primaire de la ligne ajoutée, message d'erreur sinon
+   */
+  public function ajouterTimbreEtEnchere($champsTimbre, $champsEnchere)
+  {
+      try {
+          var_dump($champsTimbre, $champsEnchere);
+          $this->debuterTransaction();
+
+          $this->sql = '
+              INSERT INTO timbre SET
+              id_utilisateur          = :id_utilisateur,
+              timbre_nom              = :timbre_nom,
+              timbre_date_creation    = :timbre_date_creation,
+              timbre_condition        = :timbre_condition,
+              timbre_tirage           = :timbre_tirage,
+              timbre_longueur         = :timbre_longueur,
+              timbre_largeur          = :timbre_largeur,
+              timbre_certifie         = :timbre_certifie,
+              timbre_description      = :timbre_description,
+              timbre_pays             = :timbre_pays,
+              timbre_couleur          = :timbre_couleur';
+
+          $timbre_id = $this->CUDLigne($champsTimbre);
+          var_dump($timbre_id);
+          $this->modifierTimbreImagePrincipale($timbre_id);
+
+          // Insertion des images supplémentaires dans la table "image"
+          if (isset($_FILES['image_fichier'])) {
+            $image_files = $_FILES['image_fichier'];
+            $this->ajouterImagesSupplementaires($timbre_id, $image_files);
+          }
+          
+          if ($timbre_id > 0) { // Vérification de la clé du timbre ajoutée
+              $this->sql = '
+                  INSERT INTO enchere SET
+                  id_vendeur              = :id_vendeur,
+                  enchere_prix_plancher   = :enchere_prix_plancher,
+                  enchere_date_debut      = :enchere_date_debut,
+                  enchere_date_fin        = :enchere_date_fin,
+                  id_timbre               = :id_timbre';
+
+              $champsEnchere['id_timbre'] = $timbre_id;
+              var_dump($champsEnchere);
+              $enchere_id = $this->CUDLigne($champsEnchere);
+
+              $this->validerTransaction();
+              return $enchere_id;
+          } else {
+              $this->annulerTransaction();
+              return "Erreur lors de l'ajout du timbre.";
+          }
+      } catch (Exception $e) {
+          $this->annulerTransaction();
+          return $e->getMessage();
+      }
+  }
+
+
+
+  /**
+   * Modifier l'image principale du timbre
+   * @param int $timbre_id
+   * @return boolean true si téléversement, false sinon
+   */ 
+  public function modifierTimbreImagePrincipale($timbre_id) {
+    if ($_FILES['timbre_image_principale']['tmp_name'] !== "") {
+    // if (isset($_FILES['timbre_image_principale']) && $_FILES['timbre_image_principale']['tmp_name'] !== "") {
+      $this->sql = 'UPDATE timbre SET timbre_image_principale = :timbre_image_principale WHERE timbre_id = :timbre_id';
+      $champs['timbre_id']      = $timbre_id;
+      $champs['timbre_image_principale'] = "medias/image_principale/ip-$timbre_id-".time().".jpg";
+      $this->CUDLigne($champs);
+      foreach (glob("medias/image_principale/ip-$timbre_id-*") as $fichier) {
+        if (!@unlink($fichier)) 
+          throw new Exception("Erreur dans la suppression de l'ancien fichier image de l'image principale du timbre.");
+      } 
+      if (!@move_uploaded_file($_FILES['timbre_image_principale']['tmp_name'], $champs['timbre_image_principale']))
+        throw new Exception("Le stockage du fichier image de l'image principale du timbre a échoué.");
+      return true; 
+    }
+    return false;
+  }
+
+  /**
+   * Ajouter les images supplémentaires du timbre dans la table "image"
+   * @param int $timbre_id
+   * @param array $image_files
+   * @return void
+   */
+  public function ajouterImagesSupplementaires($timbre_id, $image_files)
+  {
+      foreach ($image_files['name'] as $index => $filename) {
+          // Vérifier si le fichier a été téléchargé avec succès
+          if ($image_files['error'][$index] === UPLOAD_ERR_OK) {
+              // Déplacer le fichier vers le dossier de destination
+              $filename = "medias/image_supplementaire/is-$timbre_id-$index-" . time() . ".jpg";
+              if (!move_uploaded_file($image_files['tmp_name'][$index], $filename)) {
+                  throw new Exception("Le stockage du fichier image supplémentaire a échoué.");
+              }
+
+              // Insérer les informations de l'image dans la table "image"
+              $this->sql = 'INSERT INTO image (timbre_id, image_fichier) VALUES (:timbre_id, :image_fichier)';
+              $champs = [
+                  'timbre_id' => $timbre_id,
+                  'image_fichier' => $filename
+              ];
+              $this->CUDLigne($champs);
+          } else {
+              throw new Exception("Une erreur s'est produite lors du téléchargement de l'image supplémentaire.");
+          }
+      }
+  }
+
+  /**
+   * Ajouter une mise
+   * @param array $champs tableau des champs de la mise 
+   * @return int|string clé primaire de la ligne ajoutée, message d'erreur sinon
+   */ 
+  public function ajouterMise($champs) {
+    $this->sql = '
+      INSERT INTO mise SET
+      mise_montant    = :mise_montant,
+      id_utilisateur = :id_utilisateur,
+      id_enchere = :id_enchere';
     return $this->CUDLigne($champs);
   }
 

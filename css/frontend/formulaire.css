@@ -1,0 +1,24 @@
+section .formulaire-ajout {
+    display: flex;
+    flex-direction: column;
+}
+
+.formulaire-ajout label {
+    display: block;
+    margin-top: 1rem;
+}
+
+/* .formulaire-ajout input, .formulaire-ajout select, .formulaire-ajout textarea {
+    margin-top: 1rem;
+} */
+.formulaire-ajout span {
+    margin-bottom: 1rem;
+}
+
+.formulaire-ajout select {
+    background-color: var(--couleur-gris-pale);
+}
+
+.formulaire-erreur {
+    color: red;
+}

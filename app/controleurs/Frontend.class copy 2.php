@@ -132,7 +132,7 @@ class Frontend extends Routeur {
             "gabarit-frontend");
   }
 
-	/**
+    /**
    * Voir les informations d'une enchere
    * 
    */  
@@ -151,61 +151,6 @@ class Frontend extends Routeur {
               'titre'        => "Fiche d'enchère",
               'enchere'      => $enchere,
               'images'        => $images
-            ),
-            "gabarit-frontend");
-  }
-
-	/**
-   * Voir les informations d'une enchere
-   * 
-   */  
-  public function miser() {
-	$erreurs = [];
-	if (!empty($_POST)) {
-		$regExp = '/^\d{1,7}(\.\d{1,2})?$/';
-		if (!preg_match($regExp, $_POST['mise_montant'])) {
-			$erreurs['mise_montant'] = "La mise de l'enchère doit être un nombre valide.";
-		}
-		else if ($_POST['mise_montant'] < $_POST['valeur_minimale']) {
-			$erreurs['mise_montant'] = "La mise de l'enchère ne dépasse pas l'offre actuelle.";
-		} 
-
-		if (count($erreurs) === 0) {
-			$retour = $this->oRequetesSQL->ajouterMise([
-				'mise_montant' => $_POST['mise_montant'],
-				'id_utilisateur' => $this->oUtilConn->utilisateur_id,
-				'id_enchere' => $this->enchere_id
-			]);
-			if (preg_match('/^[1-9]\d*$/', $retour)) {         
-				$this->messageRetourAction = "Mise réussie!";
-			} else {
-				$this->classRetour = "erreur";
-				$this->messageRetourAction = "Mise non effectuée! ".$retour;
-			}
-			$this->voirEnchere();
-			exit;
-		}
-	}
-		$enchere = null;
-		$images = null;
-
-		if (!is_null($this->enchere_id)) {
-		$enchere  = $this->oRequetesSQL->getEnchere($this->enchere_id);
-		$images    = $this->oRequetesSQL->getImages($this->enchere_id);
-		}
-		if (is_null($enchere)) throw new Exception("Enchere inexistante.");
-		
-	
-
-    new Vue("vEnchere",
-            array(
-              'oUtilConn' => $this->oUtilConn,
-              'titre'        => "Fiche d'enchère",
-              'enchere'      => $enchere,
-              'images'        => $images,
-			  'classRetour'         => $this->classRetour,  
-			  'messageRetourAction' => $this->messageRetourAction,
-			  'erreurs' => $erreurs        
             ),
             "gabarit-frontend");
   }
@@ -331,27 +276,18 @@ class Frontend extends Routeur {
 	 */
 	public function ajouterEnchere()
 	{
+		$donneesFormulaire = [];
+		$erreursEnchere = [];
+		$erreursTimbre = [];
+	
 		if (!empty($_POST)) {
 		// if (count($_POST) !== 0) {	
 			// Retour de saisie du formulaire
 			$donneesFormulaire = $_POST;
-			// $oEnchere = new Enchere($donneesFormulaire);
-			// $erreursEnchere = $oEnchere->erreurs;
-			// $oTimbre = new Timbre($donneesFormulaire);
-			// $oTimbre->setTimbre_image_principale($_FILES['timbre_image_principale']['name']); // pour contrôler le suffixe
-			$donneesFormulaireEnchere = $_POST['enchere']; // Données spécifiques à l'entité Enchere
-			$oEnchere = new Enchere($donneesFormulaireEnchere);
+			$oEnchere = new Enchere($donneesFormulaire);
 			$erreursEnchere = $oEnchere->erreurs;
-		
-			$donneesFormulaireTimbre = $_POST['timbre']; // Données spécifiques à l'entité Timbre
-			$oTimbre = new Timbre($donneesFormulaireTimbre);
-			$erreursTimbre = $oTimbre->erreurs;
-
-			if (isset($_FILES['timbre_image_principale']) && $_FILES['timbre_image_principale']['tmp_name'] !== "") {
-				$oTimbre->setTimbre_image_principale($_FILES['timbre_image_principale']['name']); // pour contrôler le suffixe
-			}
-			var_dump($_FILES['timbre_image_principale']['error']);
-			var_dump($_FILES['timbre_image_principale']);
+			$oTimbre = new Timbre($donneesFormulaire);
+			$oTimbre->setTimbre_image_principale($_FILES['timbre_image_principale']['name']); // pour contrôler le suffixe
 			if (isset($_FILES['image_fichier'])) {
 				$image_files = $_FILES['image_fichier'];
 	
@@ -377,15 +313,13 @@ class Frontend extends Routeur {
 					'timbre_certifie' => $oTimbre->timbre_certifie,
 					'timbre_description' => $oTimbre->timbre_description,
 					'timbre_couleur' => $oTimbre->timbre_couleur,
-					'timbre_pays' => $oTimbre->timbre_pays],
-					// 'timbre_image_principale' => $oTimbre->timbre_image_principale,
-					['id_vendeur' => $id_utilisateur,
-					'enchere_prix_plancher' => $oEnchere->enchere_prix_plancher,
-					'enchere_date_debut' => $oEnchere->enchere_date_debut,
+					'timbre_image_principale' => $oTimbre->timbre_image_principale,
+					'id_vendeur' => $id_utilisateur,
+					'enchere_debut' => $oEnchere->enchere_date_debut,
 					'enchere_date_fin' => $oEnchere->enchere_date_fin
 				]);
-				// if (is_numeric($retour)) {
-				if (preg_match('/^[1-9]\d*$/', $retour)) {         
+				if (is_numeric($retour)) {
+				// if (preg_match('/^[1-9]\d*$/', $retour)) {         
 					$this->messageRetourAction = "Ajout de l'enchère numéro $retour effectué.";
 				} else {
 					$this->classRetour = "erreur";
@@ -396,14 +330,7 @@ class Frontend extends Routeur {
 				exit;
 			}
 		}
-		else {
-			$donneesFormulaire = [];
-			$erreursEnchere = [];
-			$erreursTimbre = [];
-		}
-		
-		$listePays = ["Afghanistan", "Afrique du Sud", "Albanie", "Algérie", "Allemagne", "Andorre", "Angola", "Antigua-et-Barbuda", "Arabie saoudite", "Argentine", "Arménie", "Australie", "Autriche", "Azerbaïdjan", "Bahamas", "Bahreïn", "Bangladesh", "Barbade", "Belgique", "Belize", "Bénin", "Bhoutan", "Biélorussie", "Birmanie", "Bolivie", "Bosnie-Herzégovine", "Botswana", "Brésil", "Brunei", "Bulgarie", "Burkina Faso", "Burundi", "Cambodge", "Cameroun", "Canada", "Cap-Vert", "Chili", "Chine", "Chypre", "Colombie", "Comores", "Congo", "Corée du Nord", "Corée du Sud", "Costa Rica", "Côte d'Ivoire", "Croatie", "Cuba", "Danemark", "Djibouti", "Dominique", "Égypte", "Émirats arabes unis", "Équateur", "Érythrée", "Espagne", "Estonie", "États-Unis", "Éthiopie", "Fidji", "Finlande", "France", "Gabon", "Gambie", "Géorgie", "Ghana", "Grèce", "Grenade", "Guatemala", "Guinée", "Guinée-Bissau", "Guinée équatoriale", "Guyana", "Haïti", "Honduras", "Hongrie", "Îles Cook", "Îles Marshall", "Îles Salomon", "Inde", "Indonésie", "Iran", "Iraq", "Irlande", "Islande", "Israël", "Italie", "Jamaïque", "Japon", "Jordanie", "Kazakhstan", "Kenya", "Kirghizistan", "Kiribati", "Koweït", "Laos", "Lesotho", "Lettonie", "Liban", "Libéria", "Libye", "Liechtenstein", "Lituanie", "Luxembourg", "Macédoine du Nord", "Madagascar", "Malaisie", "Malawi", "Maldives", "Mali", "Malte", "Maroc", "Maurice", "Mauritanie", "Mexique", "Micronésie", "Moldavie", "Monaco", "Mongolie", "Monténégro", "Mozambique", "Namibie", "Nauru", "Népal", "Nicaragua", "Niger", "Nigeria", "Niue", "Norvège", "Nouvelle-Zélande", "Oman", "Ouganda", "Ouzbékistan", "Pakistan", "Palaos", "Palestine", "Panama", "Papouasie-Nouvelle-Guinée", "Paraguay", "Pays-Bas", "Pérou", "Philippines", "Pologne", "Portugal", "Qatar", "République centrafricaine", "République démocratique du Congo", "République dominicaine", "République tchèque", "Roumanie", "Royaume-Uni", "Russie", "Rwanda", "Saint-Christophe-et-Niévès", "Sainte-Lucie", "Saint-Marin", "Saint-Vincent-et-les-Grenadines", "Salvador", "Samoa", "Sao Tomé-et-Principe", "Sénégal", "Serbie", "Seychelles", "Sierra Leone", "Singapour", "Slovaquie", "Slovénie", "Somalie", "Soudan", "Soudan du Sud", "Sri Lanka", "Suède", "Suisse", "Suriname", "Eswatini", "Syrie", "Tadjikistan", "Tanzanie", "Tchad", "Thaïlande", "Timor oriental", "Togo", "Tonga", "Trinité-et-Tobago", "Tunisie", "Turkménistan", "Turquie", "Tuvalu", "Ukraine", "Uruguay", "Vanuatu", "Vatican", "Venezuela", "Viêt Nam", "Yémen", "Zambie", "Zimbabwe"];
-
+	
 		new Vue(
 			'vProfilAjouterEnchere',
 			array(
@@ -411,8 +338,7 @@ class Frontend extends Routeur {
 				'titre' => 'Ajouter une enchère',
 				'donneesFormulaire' => $donneesFormulaire,
 				'erreursEnchere' => $erreursEnchere,
-				'erreursTimbre' => $erreursTimbre,
-				'listePays' => $listePays
+				'erreursTimbre' => $erreursTimbre
 			),
 			'gabarit-frontend'
 		);

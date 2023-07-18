@@ -1,0 +1,131 @@
+{# <section>
+  <h1>{{ titre|upper }}</h1>
+  
+  <form method="POST" action="profil?entite=enchere&action=a">
+
+    <label>Titre</label>
+    <input name="timbre_nom" value="{{ timbre.timbre_nom }}">
+    <span>&nbsp;{{ erreurs.timbre_nom }}</span>
+
+    <label>Date du début de l'enchère</label>
+    <input type="datetime-local" name="enchere_date_debut" value="{{ enchere.enchere_date_debut }}">
+    <span>&nbsp;{{ erreurs.enchere_date_debut }}</span>
+
+    <label>Date de fin de l'enchère</label>
+    <input type="datetime-local" name="enchere_date_fin" value="{{ enchere.enchere_date_fin }}">
+    <span>&nbsp;{{ erreurs.enchere_date_fin }}</span>
+
+    <label>Prix de plancher</label>
+    <input type="number" step="0.01" min="0" name="enchere_prix_plancher" value="{{ enchere.enchere_prix_plancher }}">
+    <span>&nbsp;{{ erreurs.enchere_prix_plancher }}</span>
+
+    <label>Date de création du timbre</label>
+    <input name="timbre_date_creation" value="{{ timbre.timbre_date_creation }}">
+    <span>&nbsp;{{ erreurs.timbre_date_creation }}</span>
+
+    {# à compléter pour timbre_condition (via un select de 5 choix), timbre_tirage, timbre_longueur, timbre_largeur, timbre_certifie, timbre_description, timbre_couleur (via un select de plusieurs choix de couleurs typiques), timbre_image_principale  #}
+
+    {# Aussi les images supplémentaires avec champs image_fichier #}
+
+    {# <input type="submit" value="Envoyer">
+
+  </form>
+</section> #}
+<section class="formulaire-ajout">
+  <h1>{{ titre|upper }}</h1>
+  
+  <form method="POST" action="profil?entite=enchere&action=a">
+    <label>Titre</label>
+    <input name="timbre_nom" value="{{ timbre.timbre_nom }}">
+    <span>&nbsp;{{ erreurs.timbre_nom }}</span>
+
+    <label>Date du début de l'enchère</label>
+    <input type="datetime-local" name="enchere_date_debut" value="{{ enchere.enchere_date_debut }}">
+    <span>&nbsp;{{ erreurs.enchere_date_debut }}</span>
+
+    <label>Date de fin de l'enchère</label>
+    <input type="datetime-local" name="enchere_date_fin" value="{{ enchere.enchere_date_fin }}">
+    <span>&nbsp;{{ erreurs.enchere_date_fin }}</span>
+
+    <label>Prix de plancher</label>
+    <input type="number" step="0.01" min="0.01" name="enchere_prix_plancher" value="{{ enchere.enchere_prix_plancher }}">
+    <span>&nbsp;{{ erreurs.enchere_prix_plancher }}</span>
+
+    <label>Date de création du timbre</label>
+    <input type="date" name="timbre_date_creation" value="{{ timbre.timbre_date_creation }}">
+    <span>&nbsp;{{ erreurs.timbre_date_creation }}</span>
+
+    <label>Condition du timbre</label>
+    <select name="timbre_condition">
+    <option value="parfaite" {% if timbre.timbre_condition == 'parfaite' %}selected{% endif %}>Parfaite</option>
+    <option value="excellente" {% if timbre.timbre_condition == 'excellente' %}selected{% endif %}>Excellente</option>
+    <option value="bonne" {% if timbre.timbre_condition == 'bonne' %}selected{% endif %}>Bonne</option>
+    <option value="moyenne" {% if timbre.timbre_condition == 'moyenne' %}selected{% endif %}>Moyenne</option>
+    <option value="endommage" {% if timbre.timbre_condition == 'endommage' %}selected{% endif %}>Endommagé</option>
+    </select>
+    <span>&nbsp;{{ erreurs.timbre_condition }}</span>
+
+    <label>Tirage du timbre</label>
+    <input name="timbre_tirage" value="{{ timbre.timbre_tirage }}">
+    <span>&nbsp;{{ erreurs.timbre_tirage }}</span>
+
+    <label>Longueur du timbre</label>
+    <div class="dimensions">
+        <input type="number" step="0.01" min="0.01" name="timbre_longueur" value="{{ timbre.timbre_longueur }}">
+        <span class="unit">cm</span>
+    </div>
+    <span>&nbsp;{{ erreurs.timbre_longueur }}</span>
+
+    <label>Largeur du timbre</label>
+    <div class="dimensions">
+        <input type="number" step="0.01" min="0.01" name="timbre_largeur" value="{{ timbre.timbre_largeur }}">
+        <span class="unit">cm</span>
+    </div>
+    <span>&nbsp;{{ erreurs.timbre_largeur }}</span>
+
+
+    <label>Certifié</label>
+    <input type="checkbox" name="timbre_certifie" {% if timbre.timbre_certifie %}checked{% endif %}>
+    <span>&nbsp;{{ erreurs.timbre_certifie }}</span>
+
+    <label>Description du timbre</label>
+    <textarea name="timbre_description">{{ timbre.timbre_description }}</textarea>
+    <span>&nbsp;{{ erreurs.timbre_description }}</span>
+
+    <label>Couleur du timbre</label>
+    <select name="timbre_couleur">
+        <option value="rouge" {% if 'rouge' in timbre.timbre_couleur %}selected{% endif %}>Rouge</option>
+        <option value="orange" {% if 'orange' in timbre.timbre_couleur %}selected{% endif %}>Orange</option>
+        <option value="jaune" {% if 'jaune' in timbre.timbre_couleur %}selected{% endif %}>Jaune</option>
+        <option value="vert" {% if 'vert' in timbre.timbre_couleur %}selected{% endif %}>Vert</option>
+        <option value="bleu" {% if 'bleu' in timbre.timbre_couleur %}selected{% endif %}>Bleu</option>
+        <option value="mauve" {% if 'mauve' in timbre.timbre_couleur %}selected{% endif %}>Mauve</option>
+        <option value="rose" {% if 'rose' in timbre.timbre_couleur %}selected{% endif %}>Rose</option>
+        <option value="multicolore" {% if 'multicolore' in timbre.timbre_couleur %}selected{% endif %}>Multicolore</option>
+        <option value="noir/blanc" {% if 'noir/blanc' in timbre.timbre_couleur %}selected{% endif %}>Noir/Blanc</option>
+        <option value="gris" {% if 'gris' in timbre.timbre_couleur %}selected{% endif %}>Gris</option>
+        <option value="brun" {% if 'brun' in timbre.timbre_couleur %}selected{% endif %}>Brun</option>
+        <option value="beige" {% if 'beige' in timbre.timbre_couleur %}selected{% endif %}>Beige</option>
+        <option value="or" {% if 'or' in timbre.timbre_couleur %}selected{% endif %}>Or</option>
+        <option value="argent" {% if 'argent' in timbre.timbre_couleur %}selected{% endif %}>Argent</option>
+    </select>
+    <span>&nbsp;{{ erreurs.timbre_couleur }}</span>
+
+
+    <label>Image principale du timbre</label>
+    <input type="file" name="timbre_image_principale">
+    <span>&nbsp;{{ erreurs.timbre_image_principale }}</span>
+
+    <label>Images supplémentaires du timbre</label>
+    <div id="images-container">
+        <input type="file" name="image_fichier" class="image-supplementaire">
+        <input type="file" name="image_fichier" class="image-supplementaire">
+        <input type="file" name="image_fichier" class="image-supplementaire">
+        <input type="file" name="image_fichier" class="image-supplementaire">
+        <input type="file" name="image_fichier" class="image-supplementaire">
+    </div>
+    <span>&nbsp;{{ erreurs.image_fichier }}</span>
+
+    <input type="submit" value="Envoyer">
+  </form>
+</section>
