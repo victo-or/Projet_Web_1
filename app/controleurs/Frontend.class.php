@@ -122,93 +122,128 @@ class Frontend extends Routeur {
    * 
    */  
   public function listerEncheres() {
-    $encheres = $this->oRequetesSQL->getEncheres();
+	$id_utilisateur = $this->oUtilConn->utilisateur_id;
+	$keyword = isset($_GET['search']) ? $_GET['search'] : null;
+
+    $encheres = $this->oRequetesSQL->getEncheres([
+        'utilisateur_id' => $id_utilisateur,
+        'keyword' => $keyword
+    ]);
+
     new Vue("vListeEncheres",
             array(
               'oUtilConn' => $this->oUtilConn,
               'titre'  => "Catalogue des enchères",
-              'encheres' => $encheres
+              'encheres' => $encheres,
+			  'keyword' => $keyword
             ),
             "gabarit-frontend");
   }
 
+//   /**
+//    * Lister les encheres dans la page catalogue
+//    * 
+//    */  
+//   public function listerEncheres() {
+// 	$id_utilisateur = $this->oUtilConn->utilisateur_id;
+//     $encheres = $this->oRequetesSQL->getEncheres($id_utilisateur);
+//     new Vue("vListeEncheres",
+//             array(
+//               'oUtilConn' => $this->oUtilConn,
+//               'titre'  => "Catalogue des enchères",
+//               'encheres' => $encheres
+//             ),
+//             "gabarit-frontend");
+//   }
+
+// 	/**
+//    * Voir les informations d'une enchere
+//    * 
+//    */  
+//   public function voirEnchere() {
+//     $enchere = false;
+//     if (!is_null($this->enchere_id)) {
+//       $enchere  = $this->oRequetesSQL->getEnchere($this->enchere_id);
+//       $images    = $this->oRequetesSQL->getImages($this->enchere_id);
+
+//     }
+//     if (!$enchere) throw new Exception("Enchere inexistante.");
+
+//     new Vue("vEnchere",
+//             array(
+//               'oUtilConn' => $this->oUtilConn,
+//               'titre'        => "Fiche d'enchère",
+//               'enchere'      => $enchere,
+//               'images'        => $images
+//             ),
+//             "gabarit-frontend");
+//   }
+
 	/**
-   * Voir les informations d'une enchere
-   * 
-   */  
-  public function voirEnchere() {
-    $enchere = false;
-    if (!is_null($this->enchere_id)) {
-      $enchere  = $this->oRequetesSQL->getEnchere($this->enchere_id);
-      $images    = $this->oRequetesSQL->getImages($this->enchere_id);
-
-    }
-    if (!$enchere) throw new Exception("Enchere inexistante.");
-
-    new Vue("vEnchere",
-            array(
-              'oUtilConn' => $this->oUtilConn,
-              'titre'        => "Fiche d'enchère",
-              'enchere'      => $enchere,
-              'images'        => $images
-            ),
-            "gabarit-frontend");
-  }
-
-	/**
-   * Voir les informations d'une enchere
-   * 
-   */  
-  public function miser() {
-	$erreurs = [];
-	if (!empty($_POST)) {
-		$regExp = '/^\d{1,7}(\.\d{1,2})?$/';
-		if (!preg_match($regExp, $_POST['mise_montant'])) {
-			$erreurs['mise_montant'] = "La mise de l'enchère doit être un nombre valide.";
-		}
-		else if ($_POST['mise_montant'] < $_POST['valeur_minimale']) {
-			$erreurs['mise_montant'] = "La mise de l'enchère ne dépasse pas l'offre actuelle.";
-		} 
-
-		if (count($erreurs) === 0) {
-			$retour = $this->oRequetesSQL->ajouterMise([
-				'mise_montant' => $_POST['mise_montant'],
-				'id_utilisateur' => $this->oUtilConn->utilisateur_id,
-				'id_enchere' => $this->enchere_id
-			]);
-			if (preg_match('/^[1-9]\d*$/', $retour)) {         
-				$this->messageRetourAction = "Mise réussie!";
-			} else {
-				$this->classRetour = "erreur";
-				$this->messageRetourAction = "Mise non effectuée! ".$retour;
+	 * Voir les informations d'une enchere
+	 * 
+	 */  
+	public function voirEnchere() {
+		if (!empty($_POST)) {
+			$erreurs = [];
+			$regExp = '/^\d{1,7}(\.\d{1,2})?$/';
+			if (!preg_match($regExp, $_POST['mise_montant'])) {
+				$erreurs['mise_montant'] = "La mise de l'enchère doit être un nombre valide.";
 			}
-			$this->voirEnchere();
-			exit;
+			else if ($_POST['mise_montant'] < $_POST['valeur_minimale']) {
+				$erreurs['mise_montant'] = "La mise de l'enchère ne dépasse pas l'offre actuelle.";
+			}
+
+			if (count($erreurs) === 0) {
+				$retour = $this->oRequetesSQL->ajouterMise([
+					'mise_montant' => $_POST['mise_montant'],
+					'id_utilisateur' => $this->oUtilConn->utilisateur_id,
+					'id_enchere' => $this->enchere_id
+				]);
+				if (preg_match('/^[1-9]\d*$/', $retour)) {         
+					$this->messageRetourAction = "Mise réussie!";
+				} else {
+					$this->classRetour = "erreur";
+					$this->messageRetourAction = "Mise non effectuée! " . $retour;
+				}
+				// $this->voirEnchere();
+				// exit;
+			}
 		}
-	}
+		else {
+			$erreurs = [];
+		}
+		
 		$enchere = null;
 		$images = null;
 
 		if (!is_null($this->enchere_id)) {
-		$enchere  = $this->oRequetesSQL->getEnchere($this->enchere_id);
-		$images    = $this->oRequetesSQL->getImages($this->enchere_id);
-		}
-		if (is_null($enchere)) throw new Exception("Enchere inexistante.");
-		
-	
+			$enchere = $this->oRequetesSQL->getEnchere($this->enchere_id);
+			$images = $this->oRequetesSQL->getImages($this->enchere_id);
+			
+			// Calcul de la valeur minimale de mise avec une incrémentation temporaire de 0.01$
+			$valeurMinimale = isset($enchere['offre_actuelle']) ? $enchere['offre_actuelle'] + 0.01 : $enchere['enchere_prix_plancher'];
 
-    new Vue("vEnchere",
-            array(
-              'oUtilConn' => $this->oUtilConn,
-              'titre'        => "Fiche d'enchère",
-              'enchere'      => $enchere,
-              'images'        => $images,
-			  'classRetour'         => $this->classRetour,  
-			  'messageRetourAction' => $this->messageRetourAction,
-			  'erreurs' => $erreurs        
-            ),
-            "gabarit-frontend");
-  }
+			// Ajouter la valeur minimale de mise à la vue
+			$enchere['valeur_minimale'] = $valeurMinimale;
+
+		}
+		
+		if (is_null($enchere)) {
+			throw new Exception("Enchere inexistante.");
+		}
+
+		new Vue("vEnchere", [
+			'oUtilConn' => $this->oUtilConn,
+			'titre' => "Fiche d'enchère",
+			'enchere' => $enchere,
+			'images' => $images,
+			'classRetour' => $this->classRetour,  
+			'messageRetourAction' => $this->messageRetourAction,
+			'erreurs' => $erreurs        
+		], "gabarit-frontend");
+	}
+
 
 
 

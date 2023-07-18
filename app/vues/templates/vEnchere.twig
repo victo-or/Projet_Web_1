@@ -9,25 +9,40 @@
     <div class="dates">
       <span class="label">Date de début :</span> {{ enchere.enchere_date_debut }}<br>
       <span class="label">Date de fin :</span> {{ enchere.enchere_date_fin }}<br>
-      <span class="label">Temps restant :</span> {{ enchere.temps_restant }}
+      {% if date() > date(enchere.enchere_date_debut) and date() < date(enchere.enchere_date_fin) %}
+        <span class="label">Temps restant :</span> {{ enchere.temps_restant }}
+      {% elseif date() > date(enchere.enchere_date_fin) %}
+        <p>Enchère archivée</p>
+      {% elseif date() < date(enchere.enchere_date_debut) %}
+        <p>Enchère à venir</p>
+      {% endif %}
     </div>
     <div class="offre">
       <span class="label">Offre actuelle :</span>
       C$ {% if enchere.offre_actuelle is not null %}{{ enchere.offre_actuelle }}{% else %}{{ enchere.enchere_prix_plancher }}{% endif %}
-      <span class="label">Nombre de mises :</span> {{ enchere.nb_mises }}
+      <span>({{ enchere.nb_mises }} mises)</span> 
+      {% if oUtilConn.utilisateur_id == enchere.id_utilisateur_offre_actuelle %}
+        <span>- Vous avez la plus haute mise!</span>
+      {% endif %}
     </div>
-
-    <form action="miser?enchere_id={{ enchere.enchere_id }}" method="POST">
-      <label for="prix">Prix :</label>
-      <input type="number" step="0.01" min="{{ enchere.offre_actuelle|default(enchere.enchere_prix_plancher) }}" name="mise_montant" id="prix" value="{{ enchere.offre_actuelle|default(enchere.enchere_prix_plancher) }}">
-      <input type="hidden" name="valeur_minimale" value="{{ enchere.offre_actuelle|default(enchere.enchere_prix_plancher) }}">
-      <button type="submit">Miser</button>
-      <span class="formulaire-erreur">&nbsp;{{ erreurs.mise_montant }}</span>
-      <p class="messageRetourAction {{ classRetour }}">{{ messageRetourAction }}&nbsp;</p> 
-   </form>
+    
+    {% if date() > date(enchere.enchere_date_debut) and date() < date(enchere.enchere_date_fin) %}
+      <form action="enchere?enchere_id={{ enchere.enchere_id }}" method="POST">
+        <label for="prix">Mise minimale :</label>
+        <input type="number" step="0.01" 
+          min="{{ enchere.valeur_minimale }}" 
+          name="mise_montant" 
+          id="prix" 
+          value="{{ enchere.valeur_minimale }}">
+        <input type="hidden" name="valeur_minimale" value="{{ enchere.valeur_minimale }}">
+        <button type="submit">Miser</button>
+        <span class="formulaire-erreur">&nbsp;{{ erreurs.mise_montant }}</span>
+        <span class="messageRetourAction {{ classRetour }}">{{ messageRetourAction }}&nbsp;</span> 
+    </form>
+   {% endif %}
 
     <div class="vendeur">
-      <span class="label">Vendeur :</span> {{ enchere.utilisateur_pseudo }}
+      <span class="label">Vendeur :</span> {{ enchere.pseudo_vendeur }}
     </div>
     <div class="timbre">
       <span class="label">Nom :</span> {{ enchere.timbre_nom }}<br>
@@ -36,7 +51,7 @@
       <span class="label">Couleur :</span> {{ enchere.timbre_couleur }}<br>
       <span class="label">Condition :</span> {{ enchere.timbre_condition }}<br>
       <span class="label">Tirage :</span> {{ enchere.timbre_tirage }}<br>
-      <span class="label">Dimensions :</span> {{ enchere.timbre_longueur }} x {{ enchere.timbre_largeur }}<br>
+      <span class="label">Dimensions :</span> {{ enchere.timbre_longueur }} x {{ enchere.timbre_largeur }} cm<br>
       <span class="label">Certifié :</span> {% if enchere.timbre_certifie %}Oui{% else %}Non{% endif %}
     </div>
     <div class="description">

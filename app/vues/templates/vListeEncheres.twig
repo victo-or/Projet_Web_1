@@ -42,13 +42,14 @@
           </svg>
         </button>
       </div>
-      <form action="GET">
+      <form action="/catalogue" method="GET">
         <details open>
           <summary><label for="search-lot">Recherche de lots</label></summary>
           <input id="search-lot"
             class="nav-searchbar"
             type="search"
             placeholder="recherche par mot clé"
+            name="search"
           >
           <button type="submit" class="btn-icon" aria-label="Bouton pour soumettre l'entrée de recherche de lots">
             <svg
@@ -578,23 +579,81 @@
           <div class="card-lot-number">
             #{{ enchere.enchere_id }}
             <div>
+            {% if enchere.enchere_cdc_lord == 1 %}
               <svg
-                width="22"
-                height="20"
-                viewBox="0 0 22 20"
+                width="21"
+                height="24"
+                viewBox="0 0 21 24"
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
               >
-                <title>Favoris</title>
-                <desc>Icône de coeur pour les items favoris</desc>
+                <title>Favoris du Lord Stampee</title>
+                <desc>
+                  Icône étoile qui montre que l'item est un item favori du
+                  Lord Stampee, le fondateur de Stampee
+                </desc>
                 <path
-                  d="M10.9995 2.40848C9.93906 1.5305 8.55717 1 7.04516 1C3.70648 1 1 3.58934 1 6.78445C1 8.22824 1.55256 9.54846 2.46735 10.5612L11.0092 18.7333L19.3802 10.7247C20.3853 9.69246 21 8.30721 21 6.78445C21 3.59027 18.2935 1 14.9539 1C13.4419 1 12.06 1.5305 10.9995 2.40848Z"
-                  stroke="#6E6E6E"
-                  stroke-width=".5"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
+                  d="M10.3093 0L7.33168 6.66208L0 5.87426L4.35666 11.7485L0 17.6228L7.33168 16.8375L10.3093 23.497L13.2843 16.8375L20.6108 17.6228L16.2593 11.7485L20.6134 5.87426L13.2843 6.66208L10.3093 0ZM10.3067 3.23798L12.4631 8.06436L17.7753 7.49325L14.6195 11.7485L17.7778 16.0063L12.4631 15.4352L10.3067 20.2616L8.15291 15.4352L2.83815 16.0063L5.99653 11.7485L2.84074 7.49325L8.15291 8.06436L10.3067 3.23798Z"
+                  fill="#26369A"
                 />
-              </svg>
+                <path
+                  d="M10.3067 3.23798L12.4631 8.06436L17.7753 7.49325L14.6195 11.7485L17.7778 16.0063L12.4631 15.4352L10.3067 20.2616L8.15291 15.4352L2.83815 16.0063L5.99653 11.7485L2.84074 7.49325L8.15291 8.06436L10.3067 3.23798Z"
+                  fill="#26369A"
+                />
+                <path
+                  d="M10.3093 0L7.33168 6.66208L0 5.87426L4.35666 11.7485L0 17.6228L7.33168 16.8375L10.3093 23.497L13.2843 16.8375L20.6108 17.6228L16.2593 11.7485L20.6134 5.87426L13.2843 6.66208L10.3093 0ZM10.3067 3.23798L12.4631 8.06436L17.7753 7.49325L14.6195 11.7485L17.7778 16.0063L12.4631 15.4352L10.3067 20.2616L8.15291 15.4352L2.83815 16.0063L5.99653 11.7485L2.84074 7.49325L8.15291 8.06436L10.3067 3.23798Z"
+                  stroke="black"
+                  stroke-width="0.00064"
+                />
+                <path
+                  d="M10.3067 3.23798L12.4631 8.06436L17.7753 7.49325L14.6195 11.7485L17.7778 16.0063L12.4631 15.4352L10.3067 20.2616L8.15291 15.4352L2.83815 16.0063L5.99653 11.7485L2.84074 7.49325L8.15291 8.06436L10.3067 3.23798Z"
+                  stroke="black"
+                  stroke-width="0.00064"
+                />
+              </svg> 
+            {% endif %}
+            {% if enchere.favori == 0 %}             
+              <a href="favori">
+                <svg
+                  width="22"
+                  height="20"
+                  viewBox="0 0 22 20"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <title>Favoris</title>
+                  <desc>Icône de coeur pour les items favoris</desc>
+                  <path
+                    d="M10.9995 2.40848C9.93906 1.5305 8.55717 1 7.04516 1C3.70648 1 1 3.58934 1 6.78445C1 8.22824 1.55256 9.54846 2.46735 10.5612L11.0092 18.7333L19.3802 10.7247C20.3853 9.69246 21 8.30721 21 6.78445C21 3.59027 18.2935 1 14.9539 1C13.4419 1 12.06 1.5305 10.9995 2.40848Z"
+                    stroke="#6E6E6E"
+                    stroke-width=".5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </a>
+            {% else %}
+              <a href="favori">
+                <svg
+                  width="22"
+                  height="20"
+                  viewBox="0 0 22 20"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <title>Favoris</title>
+                  <desc>Icône de coeur pour les items favoris</desc>
+                  <path
+                    d="M10.9995 2.40848C9.93906 1.5305 8.55717 1 7.04516 1C3.70648 1 1 3.58934 1 6.78445C1 8.22824 1.55256 9.54846 2.46735 10.5612L11.0092 18.7333L19.3802 10.7247C20.3853 9.69246 21 8.30721 21 6.78445C21 3.59027 18.2935 1 14.9539 1C13.4419 1 12.06 1.5305 10.9995 2.40848Z"
+                    stroke="#6E6E6E"
+                    stroke-width=".5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    fill="#6E6E6E"
+                  />
+                </svg>
+              </a>           
+            {% endif %}
             </div>
           </div>
           <a class="card-title" href=""enchere?enchere_id={{ enchere.enchere_id }}""
@@ -605,7 +664,15 @@
           <div class="card-price">
             C$ {% if enchere.offre_actuelle is not null %}{{ enchere.offre_actuelle }}{% else %}{{ enchere.enchere_prix_plancher }}{% endif %} <span class="card-bid-count">({{ enchere.nb_mises }} mises)</span>
           </div>
-          <div class="card-time-left">{{ enchere.temps_restant }}</div>
+          <div class="card-time-left">
+            {% if date() > date(enchere.enchere_date_debut) and date() < date(enchere.enchere_date_fin) %}
+              {{ enchere.temps_restant }}
+            {% elseif date() > date(enchere.enchere_date_fin) %}
+              Enchère archivée
+            {% elseif date() < date(enchere.enchere_date_debut) %}
+              Enchère à venir
+            {% endif %}
+          </div>
         </div>
       </div>
     {% else %}

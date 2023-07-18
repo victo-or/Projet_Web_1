@@ -6,26 +6,66 @@
  */
 class RequetesSQL extends RequetesPDO {
 
+  // /**
+  //  * Récupération des encheres à afficher dans la page catalogue
+  //  * @return array tableau des lignes produites par la select   
+  //  */ 
+  // public function getEncheres($utilisateur_id = null) {
+  //   $this->sql = '
+  //   SELECT
+  //     enchere.*,
+  //     MAX(mise.mise_montant) AS offre_actuelle,
+  //     COUNT(mise.mise_id) AS nb_mises,
+  //     timbre.*,
+  //     CONCAT(
+  //       FLOOR(TIMESTAMPDIFF(HOUR, NOW(), enchere_date_fin) / 24),
+  //       " jours, ",
+  //       MOD(TIMESTAMPDIFF(HOUR, NOW(), enchere_date_fin), 24),
+  //       " heures, ",
+  //       MINUTE(TIMEDIFF(enchere_date_fin, NOW())),
+  //       " minutes"
+  //     ) AS temps_restant
+  //   FROM
+  //     enchere
+  //   INNER JOIN timbre ON timbre_id = enchere.id_timbre
+  //   LEFT JOIN mise ON mise.id_enchere = enchere_id
+  //   WHERE TIMEDIFF(enchere_date_fin, NOW()) > 0
+  //   GROUP BY enchere_id';
+  //   return $this->getLignes();
+  // }
+  
   /**
    * Récupération des encheres à afficher dans la page catalogue
    * @return array tableau des lignes produites par la select   
    */ 
-  public function getEncheres() {
+  public function getEncheres($utilisateur_id = null) {
     $this->sql = '
     SELECT
       enchere.*,
       MAX(mise.mise_montant) AS offre_actuelle,
       COUNT(mise.mise_id) AS nb_mises,
       timbre.*,
-      DATE_FORMAT(TIMEDIFF(enchere_date_fin, NOW()), "%d jours, %H heures, %i minutes") AS temps_restant
+      CONCAT(
+        FLOOR(TIMESTAMPDIFF(HOUR, NOW(), enchere_date_fin) / 24),
+        " jours, ",
+        MOD(TIMESTAMPDIFF(HOUR, NOW(), enchere_date_fin), 24),
+        " heures, ",
+        MINUTE(TIMEDIFF(enchere_date_fin, NOW())),
+        " minutes"
+      ) AS temps_restant,
+      IF(favori.id_utilisateur IS NOT NULL, 1, 0) AS favori
     FROM
       enchere
     INNER JOIN timbre ON timbre_id = enchere.id_timbre
     LEFT JOIN mise ON mise.id_enchere = enchere_id
+    LEFT JOIN favori ON favori.id_utilisateur = :utilisateur_id AND favori.id_enchere = enchere.enchere_id
     WHERE TIMEDIFF(enchere_date_fin, NOW()) > 0
     GROUP BY enchere_id';
-    return $this->getLignes();
+
+    return $this->getLignes(['utilisateur_id' => $utilisateur_id]);
   }
+  
+
   // /**
   //  * Récupération des encheres à afficher dans la page catalogue
   //  * @return array tableau des lignes produites par la select   
@@ -61,19 +101,34 @@ class RequetesSQL extends RequetesPDO {
    * @return array|false tableau associatif de la ligne produite par la select, false si aucune ligne  
    */ 
   public function getEnchere($enchere_id) {
-    $this->sql = "
+    $this->sql = '
     SELECT 
       enchere.*, 
       timbre.*, 
-      utilisateur.utilisateur_pseudo,
+      vendeur.utilisateur_pseudo AS pseudo_vendeur,
       MAX(mise.mise_montant) AS offre_actuelle,
       COUNT(mise.mise_id) AS nb_mises,
-      DATE_FORMAT(TIMEDIFF(enchere.enchere_date_fin, NOW()), '%d jours, %H heures, %i minutes') AS temps_restant
+      miseur.utilisateur_id AS id_utilisateur_offre_actuelle,
+      CONCAT(
+        FLOOR(TIMESTAMPDIFF(HOUR, NOW(), enchere_date_fin) / 24),
+        " jours, ",
+        MOD(TIMESTAMPDIFF(HOUR, NOW(), enchere_date_fin), 24),
+        " heures, ",
+        MINUTE(TIMEDIFF(enchere_date_fin, NOW())),
+        " minutes"
+      ) AS temps_restant
     FROM enchere
     INNER JOIN timbre ON enchere.id_timbre = timbre.timbre_id
-    INNER JOIN utilisateur ON enchere.id_vendeur = utilisateur.utilisateur_id
+    INNER JOIN utilisateur as vendeur ON enchere.id_vendeur = vendeur.utilisateur_id
     LEFT JOIN mise ON mise.id_enchere = enchere.enchere_id
-    WHERE enchere.enchere_id = :enchere_id";
+    LEFT JOIN utilisateur AS miseur ON miseur.utilisateur_id = (
+      SELECT id_utilisateur
+      FROM mise
+      WHERE id_enchere = enchere.enchere_id
+      ORDER BY mise_montant DESC
+      LIMIT 1
+    )
+    WHERE enchere.enchere_id = :enchere_id';
 
     return $this->getLignes(['enchere_id' => $enchere_id], RequetesPDO::UNE_SEULE_LIGNE);
   }
