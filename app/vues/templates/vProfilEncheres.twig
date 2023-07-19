@@ -55,8 +55,8 @@
                         <td>{{ enchere.offre_actuelle|default(enchere.enchere_prix_plancher) }}$</td>
                         <td>
                             <a href="profil?entite=enchere&action=m&enchere_id={{ enchere.enchere_id }}">modifier</a>
-                            <a href="profil?entite=enchere&action=s&enchere_id={{ enchere.enchere_id }}">supprimer</a>
-                            {# <span class="supprimer" data-href="profil?entite=enchere&action=s&enchere_id={{ enchere.enchere_id }}">supprimer</span> #}
+                            <a href="profil?entite=enchere&action=s&timbre_id={{ enchere.timbre_id }}">supprimer</a>
+                            {# <span class="supprimer" data-href="profil?entite=enchere&action=s&timbre_id={{ enchere.timbre_id }}">supprimer</span> #}
                         </td>
                     </tr>
                 {% endfor %}

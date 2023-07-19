@@ -18,14 +18,14 @@ class Profil extends Routeur {
   private $methodes = [
     'enchere' => [
       'l' => ['methode' => 'listerMesEncheres'],
-      'a' => ['methode' => 'ajouterEnchere'],
-      'm' => ['methode' => 'modifierEnchere'],
-      's' => ['methode' => 'supprimerEnchere']
+      'a' => ['methode' => 'ajouterEnchereTimbre'],
+      'm' => ['methode' => 'modifierEnchereTimbre'],
+      's' => ['methode' => 'supprimerEnchereTimbre']
     ],
     'favori' => [
       'l' => ['methode' => 'listerFavoris'],
       // 'a' => ['methode' => 'ajouterLivre'],
-      's' => ['methode' => 'supprimerLivre']
+      's' => ['methode' => 'supprimerFavori']
     ],
     'mise' => [
       'l' => ['methode' => 'listerMesMises']

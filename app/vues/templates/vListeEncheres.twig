@@ -11,7 +11,11 @@
   {% endfor %}
   </div>
 </section>  #}
-
+{% if keyword is not null and keyword != "" %}
+  <h1>{{ titre|capitalize }} - Recherche "{{ keyword }}"</h1>
+{% else %}
+  <h1>{{ titre|capitalize }}</h1>
+{% endif %}
 <div>
   <div class="sidebar">
     <input type="checkbox" id="filter-toggle" class="filter-toggle" aria-label="Filter-toggle">
@@ -48,7 +52,7 @@
           <input id="search-lot"
             class="nav-searchbar"
             type="search"
-            placeholder="recherche par mot clé"
+            placeholder="recherche par titre"
             name="search"
           >
           <button type="submit" class="btn-icon" aria-label="Bouton pour soumettre l'entrée de recherche de lots">
@@ -286,13 +290,17 @@
           <div class="price-values">
             <label for="price-min">
               $C
-              <input type="number" id="price-min" >
+              <input type="number" id="price-min" 
+              {# name="prix-min" #}
+              >
               min
             </label>
             -
             <label for="price-max">
               $C
-              <input type="number" id="price-max" >
+              <input type="number" id="price-max" 
+              {# name="prix-max" #}
+              >
               max
             </label>
           </div>
@@ -436,7 +444,7 @@
             <legend>Sélection d'unités :</legend>
             <ul>
               <li>
-                <input type="radio" id="cm" name="unit" value="cm" checked >
+                <input type="radio" id="cm" value="cm" checked >
                 <label for="cm">cm</label>
               </li>
               <li>
@@ -554,7 +562,7 @@
       </div>
     </div>
     <div class="filter-selections">
-      <span class="lots">118 lots:</span>
+      <span class="lots">{{ encheres|length }} items:</span>
       <span class="filter-selection"
         >$120-$500 <button class="btn-close">x</button>
       </span>
@@ -575,7 +583,7 @@
             >
           </a>
         </div>
-        <div class="card-details">
+        <div class="card-details" id="eid{{ enchere.enchere_id }}">
           <div class="card-lot-number">
             #{{ enchere.enchere_id }}
             <div>
@@ -613,7 +621,7 @@
               </svg> 
             {% endif %}
             {% if enchere.favori == 0 %}             
-              <a href="favori">
+              <a href="favori?enchere_id={{ enchere.enchere_id }}">
                 <svg
                   width="22"
                   height="20"
@@ -633,7 +641,7 @@
                 </svg>
               </a>
             {% else %}
-              <a href="favori">
+              <a href="favori?enchere_id={{ enchere.enchere_id }}">
                 <svg
                   width="22"
                   height="20"
@@ -656,11 +664,14 @@
             {% endif %}
             </div>
           </div>
-          <a class="card-title" href=""enchere?enchere_id={{ enchere.enchere_id }}""
+          <a class="card-title" href="enchere?enchere_id={{ enchere.enchere_id }}"
             ><h2>
               {{ enchere.timbre_nom }}
             </h2></a
           >
+          <div>
+            <span>{{ enchere.timbre_date_creation }}, {{ enchere.timbre_pays }}, {{ enchere.timbre_couleur }}</span>
+          </div>
           <div class="card-price">
             C$ {% if enchere.offre_actuelle is not null %}{{ enchere.offre_actuelle }}{% else %}{{ enchere.enchere_prix_plancher }}{% endif %} <span class="card-bid-count">({{ enchere.nb_mises }} mises)</span>
           </div>

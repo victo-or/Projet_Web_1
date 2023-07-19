@@ -11,6 +11,7 @@
     <link rel="stylesheet" type="text/css" href="css/frontend/main.css?v=1.2">
     <script type="module" src="js/connexionDeconnexion.js"></script>
     <script type="module" src="js/creerCompte.js"></script>
+    <script type="module" src="js/modaleSuppression.js"></script>
   </head>
   <body>
   <input type="checkbox" id="menu-toggle" class="menu-toggle" aria-label="Menu-toggle">
@@ -180,9 +181,16 @@
       </div>
       <div class="nav-connexion">
         <span id="connecter"   class="{{     oUtilConn ? 'cache' : '' }}">Se connecter</span>
-        <span id="utilisateur">{{ oUtilConn.utilisateur_prenom }}</span>
         <span id="deconnecter" class="{{ not oUtilConn ? 'cache' : '' }}">Se déconnecter</span>
-        <span id="creerCompte" class="{{     oUtilConn ? 'cache' : '' }}">Devenir membre</span>
+        <svg width="2" height="18" viewBox="0 0 2 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M1 1L1 17" stroke="#6E6E6E" stroke-width="0.25" stroke-linecap="round"/>
+        </svg>
+        <span id="creerCompte" class="{{     oUtilConn ? 'cache' : '' }}">
+          Devenir membre
+        </span>
+        <span id="utilisateur">
+          {{ oUtilConn.utilisateur_prenom }}
+        </span>
       {# {% if oUtilConn %}
         <span id="deconnecter">Se déconnecter</span>
         <svg width="2" height="18" viewBox="0 0 2 18" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -197,6 +205,7 @@
         <span id="creerCompte">Devenir membre</span>
       {% endif %} #}
       </div>
+      {% if oUtilConn %}
       <a href="#" aria-label="Favoris">
         <svg
           width="20"
@@ -260,6 +269,7 @@
           />
         </svg>
       </a>
+      {% endif %}
     </nav>
     <nav class="nav-level2">
       <a href="/catalogue">Enchères en cours</a>

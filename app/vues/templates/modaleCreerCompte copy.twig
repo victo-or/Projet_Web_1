@@ -1,14 +1,3 @@
-<script type="module">
-  document.querySelectorAll(".avecOeil span").forEach(eSpan => {
-    eSpan.onclick = function() {
-      let eInput = eSpan.previousElementSibling;
-      eInput.type = eInput.type == 'password' ? 'text' : 'password';
-      this.classList.toggle('oeil');
-      this.classList.toggle('oeilbarre');
-    };
-  });
-</script>
-
 <dialog id="modaleCreerCompte" class="modale">
   <section>
     <h1>Créer un compte</h1>
@@ -36,14 +25,14 @@
       <label>Mot de passe</label>
       <div class="avecOeil">
         <input type="password" name="nouveau_mdp" value="">
-        <span class="oeil"></span>
+        {# <span class="oeil"></span> #}
       </div>  
       <span id="err_nouveau_mdp">&nbsp;</span>
 
       <label>Confirmez le mot de passe</label>
       <div class="avecOeil">
         <input type="password" name="nouveau_mdp_bis" value="">
-        <span class="oeil"></span>
+        {# <span class="oeil"></span> #}
       </div>
       <span id="err_nouveau_mdp_bis">&nbsp;</span>
 

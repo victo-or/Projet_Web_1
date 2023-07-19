@@ -6,6 +6,7 @@
     {% endfor %}
   </div>
   <div class="details">
+    <h1>{{ enchere.timbre_nom }}</h1>
     <div class="dates">
       <span class="label">Date de début :</span> {{ enchere.enchere_date_debut }}<br>
       <span class="label">Date de fin :</span> {{ enchere.enchere_date_fin }}<br>
@@ -45,7 +46,6 @@
       <span class="label">Vendeur :</span> {{ enchere.pseudo_vendeur }}
     </div>
     <div class="timbre">
-      <span class="label">Nom :</span> {{ enchere.timbre_nom }}<br>
       <span class="label">Date de création :</span> {{ enchere.timbre_date_creation }}<br>
       <span class="label">Pays d'origine :</span> {{ enchere.timbre_pays_origine }}<br>
       <span class="label">Couleur :</span> {{ enchere.timbre_couleur }}<br>

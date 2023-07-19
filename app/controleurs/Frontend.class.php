@@ -11,14 +11,14 @@ class Frontend extends Routeur {
   private $methodes = [
     'enchere' => [
       'l' => ['methode' => 'listerMesEncheres'],
-      'a' => ['methode' => 'ajouterEnchere'],
-      'm' => ['methode' => 'modifierEnchere'],
-      's' => ['methode' => 'supprimerEnchere']
+      'a' => ['methode' => 'ajouterEnchereTimbre'],
+      'm' => ['methode' => 'modifierEnchereTimbre'],
+      's' => ['methode' => 'supprimerEnchereTimbre']
     ],
     'favori' => [
       'l' => ['methode' => 'listerMesFavoris'],
       // 'a' => ['methode' => 'ajouterLivre'],
-      's' => ['methode' => 'supprimerLivre']
+      's' => ['methode' => 'supprimerFavori']
     ],
     'mise' => [
       'l' => ['methode' => 'listerMesMises']
@@ -28,6 +28,7 @@ class Frontend extends Routeur {
   private $entite;
   private $action;
   private $enchere_id;
+  private $timbre_id;
   private $oUtilConn;
   
   private $classRetour = "fait";
@@ -40,12 +41,13 @@ class Frontend extends Routeur {
    */
   public function __construct() {
     $this->oUtilConn = $_SESSION['oUtilConn'] ?? null; 
-    $this->enchere_id   = $_GET['enchere_id'] ?? null; 
+	$this->enchere_id = $_GET['enchere_id'] ?? null;
+    $this->timbre_id = $_GET['timbre_id'] ?? null;
 
     // gestion profil
     $this->entite    = $_GET['entite']    ?? null;
     $this->action    = $_GET['action']    ?? null;
-    $this->enchere_id = $_GET['enchere_id'] ?? null;
+
 
     $this->oRequetesSQL = new RequetesSQL;
   }
@@ -66,14 +68,14 @@ class Frontend extends Routeur {
    */
   public function creerCompte() {
     $oUtilisateur = new Utilisateur($_POST);
-    var_dump($oUtilisateur);
+    // var_dump($oUtilisateur);
     $erreurs = $oUtilisateur->erreurs;
     if (count($erreurs) > 0) {
       $retour = $erreurs;
     } else {
       $retour = $this->oRequetesSQL->creerCompteClient($_POST);
       if (!is_array($retour) && preg_match('/^[1-9]\d*$/', $retour)) {
-        $oUtilisateur->profil = Utilisateur::PROFIL_CLIENT;
+        // $oUtilisateur->profil = Utilisateur::PROFIL_CLIENT;
         $_SESSION['oUtilConn'] = $oUtilisateur;
       } 
     }
@@ -122,14 +124,18 @@ class Frontend extends Routeur {
    * 
    */  
   public function listerEncheres() {
-	$id_utilisateur = $this->oUtilConn->utilisateur_id;
 	$keyword = isset($_GET['search']) ? $_GET['search'] : null;
+	$params = [];
 
-    $encheres = $this->oRequetesSQL->getEncheres([
-        'utilisateur_id' => $id_utilisateur,
-        'keyword' => $keyword
-    ]);
+	if(isset($_GET['search'])) {
+		$params['keyword'] = $_GET['search'];
+	}
+	if($this->oUtilConn != null) {
+		$params['utilisateur_id'] = $this->oUtilConn->utilisateur_id;
+	}
 
+    $encheres = $this->oRequetesSQL->getEncheres($params);
+	// var_dump($encheres);
     new Vue("vListeEncheres",
             array(
               'oUtilConn' => $this->oUtilConn,
@@ -244,6 +250,25 @@ class Frontend extends Routeur {
 		], "gabarit-frontend");
 	}
 
+	/**
+	 * Ajouter ou supprimer une enchère en favori
+	 * 
+	 */  
+	public function favori() {
+
+	if (!is_null($this->enchere_id) && ($this->oUtilConn != null)) {
+		$enchere_id = $this->enchere_id;
+		$this->oRequetesSQL->favori([
+			'enchere_id' => $enchere_id,
+			'utilisateur_id' => $this->oUtilConn->utilisateur_id]);
+	}
+
+	// $this->listerEncheres(); // Retour sur la page de liste des enchères
+	// exit;
+	header("Location: catalogue#eid$enchere_id");
+	// header("Location: catalogue");
+
+  }
 
 
 
@@ -362,9 +387,9 @@ class Frontend extends Routeur {
   // }
 
 	/**
-	 * Ajouter une enchère
+	 * Ajouter une enchère/timbre
 	 */
-	public function ajouterEnchere()
+	public function ajouterEnchereTimbre()
 	{
 		if (!empty($_POST)) {
 		// if (count($_POST) !== 0) {	
@@ -401,7 +426,7 @@ class Frontend extends Routeur {
 				$id_utilisateur = $this->oUtilConn->utilisateur_id;
 	
 				// Insertion dans la table timbre et enchere
-				$retour = $this->oRequetesSQL->ajouterTimbreEtEnchere([
+				$retour = $this->oRequetesSQL->insererTimbreEtEnchere([
 					'id_utilisateur' => $id_utilisateur,
 					'timbre_nom' => $oTimbre->timbre_nom,
 					'timbre_date_creation' => $oTimbre->timbre_date_creation,
@@ -612,10 +637,22 @@ class Frontend extends Routeur {
   //   );
   // }
 
-
-
-
-
-
+	/**
+	 * Supprimer une enchere/timbre
+	 */
+	public function supprimerEnchereTimbre() {
+		if (!is_null($this->timbre_id) && ($this->oUtilConn != null)) {
+			$timbre_id = $this->timbre_id;
+			// Vérifier que le timbre_id appartient bien à l'utilisateur connecté
+			$resultat = $this->oRequetesSQL->trouveIdUtilisateur($timbre_id);
+			if ($resultat !== false && $resultat['id_utilisateur'] == $this->oUtilConn->utilisateur_id) {
+				$retour = $this->oRequetesSQL->enleverEnchereTimbre($timbre_id);
+				if ($retour === false) $this->classRetour = "erreur";
+				$this->messageRetourAction = "Suppression de l'enchère et timbre numéro $this->timbre_id ".($retour ? "" : "non ")."effectuée.";
+			}
+		}
+		$this->listerMesEncheres(); // Retour sur la page de liste des enchères dans le profil utilisateur
+		exit;		
+  	}
 
 }

@@ -38,32 +38,89 @@ class RequetesSQL extends RequetesPDO {
    * Récupération des encheres à afficher dans la page catalogue
    * @return array tableau des lignes produites par la select   
    */ 
-  public function getEncheres($utilisateur_id = null) {
+  public function getEncheres($params = []) {
+    // $utilisateur_id = isset($params['utilisateur_id']) ? $params['utilisateur_id'] : null;
+    // $keyword = isset($params['keyword']) ? $params['keyword'] : null;
+
     $this->sql = '
     SELECT
-      enchere.*,
-      MAX(mise.mise_montant) AS offre_actuelle,
-      COUNT(mise.mise_id) AS nb_mises,
-      timbre.*,
-      CONCAT(
-        FLOOR(TIMESTAMPDIFF(HOUR, NOW(), enchere_date_fin) / 24),
-        " jours, ",
-        MOD(TIMESTAMPDIFF(HOUR, NOW(), enchere_date_fin), 24),
-        " heures, ",
-        MINUTE(TIMEDIFF(enchere_date_fin, NOW())),
-        " minutes"
-      ) AS temps_restant,
-      IF(favori.id_utilisateur IS NOT NULL, 1, 0) AS favori
-    FROM
-      enchere
-    INNER JOIN timbre ON timbre_id = enchere.id_timbre
-    LEFT JOIN mise ON mise.id_enchere = enchere_id
-    LEFT JOIN favori ON favori.id_utilisateur = :utilisateur_id AND favori.id_enchere = enchere.enchere_id
-    WHERE TIMEDIFF(enchere_date_fin, NOW()) > 0
-    GROUP BY enchere_id';
+        enchere.*,
+        MAX(mise.mise_montant) AS offre_actuelle,
+        COUNT(mise.mise_id) AS nb_mises,
+        timbre.*,
+        timbre.timbre_nom,
+        CONCAT(
+            FLOOR(TIMESTAMPDIFF(HOUR, NOW(), enchere_date_fin) / 24),
+            " jours, ",
+            MOD(TIMESTAMPDIFF(HOUR, NOW(), enchere_date_fin), 24),
+            " heures, ",
+            MINUTE(TIMEDIFF(enchere_date_fin, NOW())),
+            " minutes"
+        ) AS temps_restant';
+    if (isset($params['utilisateur_id'])) {
+      $this->sql .= ', IF(favori.id_utilisateur IS NOT NULL, 1, 0) AS favori';
+    }
 
-    return $this->getLignes(['utilisateur_id' => $utilisateur_id]);
+    $this->sql .= '    
+    FROM
+        enchere
+    INNER JOIN timbre ON timbre_id = enchere.id_timbre
+    LEFT JOIN mise ON mise.id_enchere = enchere_id';
+
+    if (isset($params['utilisateur_id'])) {
+      $this->sql .= ' LEFT JOIN favori ON favori.id_utilisateur = :utilisateur_id AND favori.id_enchere = enchere.enchere_id';
+    }
+
+    $this->sql .= '
+    WHERE
+        TIMEDIFF(enchere_date_fin, NOW()) > 0';
+
+    if (isset($params['keyword'])) {
+        $this->sql .= ' AND timbre.timbre_nom LIKE :keyword';
+    }
+
+    $this->sql .= ' GROUP BY enchere_id';
+
+    // $params['utilisateur_id'] = $utilisateur_id;
+
+    if (isset($params['keyword'])) {
+      $params['keyword'] = '%' . $params['keyword'] . '%';
+    }
+    // $params['keyword'] = '%' . $keyword . '%';
+
+    return $this->getLignes($params);
   }
+
+  // /**
+  //  * Récupération des encheres à afficher dans la page catalogue
+  //  * @return array tableau des lignes produites par la select   
+  //  */ 
+  // public function getEncheres($utilisateur_id = null) {
+  //   $this->sql = '
+  //   SELECT
+  //     enchere.*,
+  //     MAX(mise.mise_montant) AS offre_actuelle,
+  //     COUNT(mise.mise_id) AS nb_mises,
+  //     timbre.*,
+  //     CONCAT(
+  //       FLOOR(TIMESTAMPDIFF(HOUR, NOW(), enchere_date_fin) / 24),
+  //       " jours, ",
+  //       MOD(TIMESTAMPDIFF(HOUR, NOW(), enchere_date_fin), 24),
+  //       " heures, ",
+  //       MINUTE(TIMEDIFF(enchere_date_fin, NOW())),
+  //       " minutes"
+  //     ) AS temps_restant,
+  //     IF(favori.id_utilisateur IS NOT NULL, 1, 0) AS favori
+  //   FROM
+  //     enchere
+  //   INNER JOIN timbre ON timbre_id = enchere.id_timbre
+  //   LEFT JOIN mise ON mise.id_enchere = enchere_id
+  //   LEFT JOIN favori ON favori.id_utilisateur = :utilisateur_id AND favori.id_enchere = enchere.enchere_id
+  //   WHERE TIMEDIFF(enchere_date_fin, NOW()) > 0
+  //   GROUP BY enchere_id';
+
+  //   return $this->getLignes(['utilisateur_id' => $utilisateur_id]);
+  // }
   
 
   // /**
@@ -228,8 +285,12 @@ class RequetesSQL extends RequetesPDO {
       utilisateur_pseudo         = :utilisateur_pseudo,
       utilisateur_courriel       = :utilisateur_courriel,
       utilisateur_mdp            = SHA2(:nouveau_mdp, 512),
-      utilisateur_profil         = "'.Utilisateur::PROFIL_CLIENT.'"';
-    return $this->CUDLigne($champs);
+      utilisateur_profil         = "'.Utilisateur::PROFIL_CLIENT.'"
+      ';
+    // return $this->CUDLigne($champs);
+    $result = $this->CUDLigne($champs);
+    var_dump($result);
+    return $result;
   }
 
 
@@ -261,7 +322,7 @@ class RequetesSQL extends RequetesPDO {
    * @param array $champs tableau des champs du timbre et de l'enchère
    * @return int|string clé primaire de la ligne ajoutée, message d'erreur sinon
    */
-  public function ajouterTimbreEtEnchere($champsTimbre, $champsEnchere)
+  public function insererTimbreEtEnchere($champsTimbre, $champsEnchere)
   {
       try {
           var_dump($champsTimbre, $champsEnchere);
@@ -385,5 +446,51 @@ class RequetesSQL extends RequetesPDO {
     return $this->CUDLigne($champs);
   }
 
+  /**
+   * Ajouter ou enlève un favori.
+   *
+   * @param  int $enchere_id
+   * @return int id du favori inséré dans la BD ou nombre d'enregistrements enlevés
+   */
+  public function favori($params) {
 
+    // Vérifier si l'utilisateur a déjà mis en favori cette enchere
+    $this->sql = '
+      SELECT * FROM favori WHERE id_enchere = :enchere_id AND id_utilisateur = :utilisateur_id';
+    $favoriExistant = $this->getLignes($params, RequetesPDO::UNE_SEULE_LIGNE);
+
+    if($favoriExistant) {
+    $this->sql = '
+      DELETE 
+      FROM favori 
+      WHERE id_enchere = :enchere_id 
+        AND id_utilisateur = :utilisateur_id';
+      return $this->CUDLigne($params);
+    }
+    else {
+    $this->sql = "INSERT INTO favori VALUES (NULL, :utilisateur_id, :enchere_id, NULL)";
+      return $this->CUDLigne($params);
+    }
+  }
+
+  /**
+   * Trouver le id_utilisateur
+   *
+   * @param  int $timbre_id
+   * @return int id de l'utilisateur, false si aucune ligne
+   */
+  public function trouveIdUtilisateur($timbre_id) {
+  $this->sql = 'SELECT timbre.id_utilisateur FROM timbre WHERE timbre_id = :timbre_id'; 
+
+    return $this->getLignes(['timbre_id' => $timbre_id], RequetesPDO::UNE_SEULE_LIGNE);
+  }
+
+  /**
+   * Supprimer l'enchere/timbre
+   */
+  public function enleverEnchereTimbre($timbre_id) {
+    $this->sql = '
+      DELETE FROM timbre WHERE timbre_id = :timbre_id';
+    return $this->CUDLigne(['timbre_id' => $timbre_id]);
+  }
 }

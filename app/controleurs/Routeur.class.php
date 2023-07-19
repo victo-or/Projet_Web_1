@@ -17,7 +17,6 @@ class Routeur {
     ["profil",        "Frontend", "gererProfil"],
     ["creerCompte",   "Frontend", "creerCompte"],
     ["deconnecter",   "Frontend", "deconnecter"],
-    // ["ajouter",       "Frontend", "ajouterEnchere"],
     ["favori",         "Frontend", "favori"]
   ];
 
