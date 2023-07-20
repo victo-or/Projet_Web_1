@@ -29,11 +29,11 @@
 <script> history.pushState({}, '', 'profil?entite=enchere&action=l') </script>
 
 <section class="profil-mes-encheres">
-    <h2>{{ titre|upper }}</h2>
-    <a href="profil?entite=enchere&action=a">Ajouter une enchere</a>
+    <h1>{{ titre|capitalize }}</h1>
+    <a href="profil?entite=enchere&action=a" class="btn-fixed btn-rectangle btn-inline">Ajouter une enchere</a>
     <p class="messageRetourAction {{ classeRetourAction }}">{{ messageRetourAction }}&nbsp;</p>
 
-    {% if mesEncheres is empty %}
+    {# {% if mesEncheres is empty %}
         <p>Aucune enchère.</p>
     {% else %}
         <table>
@@ -57,12 +57,136 @@
                             <a href="profil?entite=enchere&action=m&enchere_id={{ enchere.enchere_id }}">modifier</a>
                             <a href="profil?entite=enchere&action=s&timbre_id={{ enchere.timbre_id }}">supprimer</a>
                             {# <span class="supprimer" data-href="profil?entite=enchere&action=s&timbre_id={{ enchere.timbre_id }}">supprimer</span> #}
-                        </td>
+                        {# </td>
                     </tr>
                 {% endfor %}
             </tbody>
         </table>
-    {% endif %}
+    {% endif %} #}
+
+            <div class="scroll-container">
+            <div class="card-insight-container">
+            <div class="scroll-btn-container">
+                <button
+                class="scroll-btn scroll-left-button"
+                aria-label="scroll-left"
+                >
+                <svg
+                    width="17"
+                    height="8"
+                    viewBox="0 0 17 8"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                >
+                    <title>Vers la gauche</title>
+                    <desc>
+                    Flèche qui montre que le bouton fait défiler vers la
+                    gauche
+                    </desc>
+                    <path
+                    d="M0.646447 3.64645C0.451184 3.84171 0.451184 4.15829 0.646447 4.35355L3.82843 7.53553C4.02369 7.73079 4.34027 7.73079 4.53553 7.53553C4.7308 7.34027 4.7308 7.02369 4.53553 6.82843L1.70711 4L4.53553 1.17157C4.7308 0.97631 4.7308 0.659727 4.53553 0.464465C4.34027 0.269203 4.02369 0.269203 3.82843 0.464465L0.646447 3.64645ZM17 3.5L1 3.5L1 4.5L17 4.5L17 3.5Z"
+                    fill="#26369A"
+                    />
+                </svg>
+                </button>
+            </div>
+            {% for enchere in mesEncheres %}
+                <div class="card-home">
+                    <div class="card">
+                        <a href="profil?entite=enchere&action=s&timbre_id={{ enchere.timbre_id }}" class="btn-fixed btn-rectangle btn-inline">Supprimer</a>
+                        <div class="card-image-container">
+                        <a href="enchere?enchere_id={{ enchere.enchere_id }}" class="card-image-link">
+                            <img
+                            src="{{ enchere.timbre_image_principale }}"
+                            alt="image de l'item {{ enchere.timbre_nom }}"
+                            class="card-image"
+                            >
+                        </a>
+                        </div>
+                        <div class="card-details" id="eid{{ enchere.enchere_id }}">
+                        <div class="card-lot-number">
+                            #{{ enchere.enchere_id }}
+                            <div>
+                            {% if enchere.enchere_cdc_lord == 1 %}
+                            <svg
+                                width="21"
+                                height="24"
+                                viewBox="0 0 21 24"
+                                fill="none"
+                                xmlns="http://www.w3.org/2000/svg"
+                            >
+                                <title>Favoris du Lord Stampee</title>
+                                <desc>
+                                Icône étoile qui montre que l'item est un item favori du
+                                Lord Stampee, le fondateur de Stampee
+                                </desc>
+                                <path
+                                d="M10.3093 0L7.33168 6.66208L0 5.87426L4.35666 11.7485L0 17.6228L7.33168 16.8375L10.3093 23.497L13.2843 16.8375L20.6108 17.6228L16.2593 11.7485L20.6134 5.87426L13.2843 6.66208L10.3093 0ZM10.3067 3.23798L12.4631 8.06436L17.7753 7.49325L14.6195 11.7485L17.7778 16.0063L12.4631 15.4352L10.3067 20.2616L8.15291 15.4352L2.83815 16.0063L5.99653 11.7485L2.84074 7.49325L8.15291 8.06436L10.3067 3.23798Z"
+                                fill="#26369A"
+                                />
+                                <path
+                                d="M10.3067 3.23798L12.4631 8.06436L17.7753 7.49325L14.6195 11.7485L17.7778 16.0063L12.4631 15.4352L10.3067 20.2616L8.15291 15.4352L2.83815 16.0063L5.99653 11.7485L2.84074 7.49325L8.15291 8.06436L10.3067 3.23798Z"
+                                fill="#26369A"
+                                />
+                                <path
+                                d="M10.3093 0L7.33168 6.66208L0 5.87426L4.35666 11.7485L0 17.6228L7.33168 16.8375L10.3093 23.497L13.2843 16.8375L20.6108 17.6228L16.2593 11.7485L20.6134 5.87426L13.2843 6.66208L10.3093 0ZM10.3067 3.23798L12.4631 8.06436L17.7753 7.49325L14.6195 11.7485L17.7778 16.0063L12.4631 15.4352L10.3067 20.2616L8.15291 15.4352L2.83815 16.0063L5.99653 11.7485L2.84074 7.49325L8.15291 8.06436L10.3067 3.23798Z"
+                                stroke="black"
+                                stroke-width="0.00064"
+                                />
+                                <path
+                                d="M10.3067 3.23798L12.4631 8.06436L17.7753 7.49325L14.6195 11.7485L17.7778 16.0063L12.4631 15.4352L10.3067 20.2616L8.15291 15.4352L2.83815 16.0063L5.99653 11.7485L2.84074 7.49325L8.15291 8.06436L10.3067 3.23798Z"
+                                stroke="black"
+                                stroke-width="0.00064"
+                                />
+                            </svg> 
+                            {% endif %}
+                            </div>
+                        </div>
+                        <a class="card-title" href="enchere?enchere_id={{ enchere.enchere_id }}"
+                            ><h2>
+                            {{ enchere.timbre_nom }}
+                            </h2></a
+                        >
+                        <div class="card-price">
+                            C$ {% if enchere.offre_actuelle is not null %}{{ enchere.offre_actuelle }}{% else %}{{ enchere.enchere_prix_plancher }}{% endif %} <span class="card-bid-count">({{ enchere.nb_mises }} mises)</span>
+                        </div>
+                        <div>
+                            <span>{{ enchere.enchere_date_debut }}</span>
+                        </div>
+                        <div>
+                            <span>{{ enchere.enchere_date_fin }}</span>
+                        </div>
+                        </div>
+                    </div>
+                    
+                </div>
+            {% endfor %}
+            <div class="scroll-btn-container">
+                <button
+                class="scroll-btn scroll-right-button"
+                aria-label="scroll right"
+                >
+                <svg
+                    width="17"
+                    height="8"
+                    viewBox="0 0 17 8"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                >
+                    <title>Vers la droite</title>
+                    <desc>
+                    Flèche qui montre que le bouton fait défiler vers la
+                    droite
+                    </desc>
+                    <path
+                    d="M16.3536 4.35355C16.5488 4.15829 16.5488 3.84171 16.3536 3.64645L13.1716 0.464467C12.9763 0.269205 12.6597 0.269205 12.4645 0.464467C12.2692 0.659729 12.2692 0.976312 12.4645 1.17157L15.2929 4L12.4645 6.82843C12.2692 7.02369 12.2692 7.34027 12.4645 7.53553C12.6597 7.7308 12.9763 7.7308 13.1716 7.53554L16.3536 4.35355ZM-4.37114e-08 4.5L16 4.5L16 3.5L4.37114e-08 3.5L-4.37114e-08 4.5Z"
+                    fill="#26369A"
+                    />
+                </svg>
+                </button>
+            </div>
+            </div>
+        </div>
 </section>
 
 

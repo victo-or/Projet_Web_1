@@ -42,7 +42,9 @@ button {
   color: var(--couleur-accent);
   box-shadow: none;
 }
-
+a.btn-inline {
+  display: inline-block;
+}
 
 /* button fixed (sans fleche) */
 .btn-fixed {

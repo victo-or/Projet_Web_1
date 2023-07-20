@@ -46,7 +46,7 @@
           </svg>
         </button>
       </div>
-      <form action="/catalogue" method="GET">
+      <form action="{{ page }}" method="GET">
         <details open>
           <summary><label for="search-lot">Recherche de lots</label></summary>
           <input id="search-lot"
@@ -568,7 +568,7 @@
             triForm.submit();
           }
         </script>
-        <form id="triForm" action="/catalogue" method="GET">
+        <form id="triForm" action="{{ page }}" method="GET">
           <div class="section">
             <label for="trier">Trier par :</label>
             <select id="trier" name="trier" onchange="submitForm()">
@@ -662,7 +662,7 @@
               </svg> 
             {% endif %}
             {% if enchere.favori == 0 %}             
-              <a href="favori?enchere_id={{ enchere.enchere_id }}">
+              <a href="favori?enchere_id={{ enchere.enchere_id }}&page={{ page }}">
                 <svg
                   width="22"
                   height="20"
@@ -682,7 +682,7 @@
                 </svg>
               </a>
             {% else %}
-              <a href="favori?enchere_id={{ enchere.enchere_id }}">
+              <a href="favori?enchere_id={{ enchere.enchere_id }}&page={{ page }}">
                 <svg
                   width="22"
                   height="20"

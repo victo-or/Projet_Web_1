@@ -11,6 +11,7 @@ class Routeur {
   // uri,             classe,     méthode
   // ------------------------------------
     ["",              "Frontend", "voirAccueil"],
+    ["accueil",       "Frontend", "voirAccueil"],
     ["catalogue",     "Frontend", "listerEncheres"],
     ["prochainement", "Frontend", "listerProchainement"],
     ["archives",      "Frontend", "listerArchives"],

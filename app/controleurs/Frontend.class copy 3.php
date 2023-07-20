@@ -32,8 +32,6 @@ class Frontend extends Routeur {
   private $oUtilConn;
 
   private $tri;
-
-  private $page;
   
   private $classRetour = "fait";
   private $messageRetourAction = "";
@@ -56,8 +54,6 @@ class Frontend extends Routeur {
 	$triOptions = ['prix-asc', 'prix-desc', 'nom-asc', 'nom-desc', 'enchere_id-asc', 'enchere_id-desc', 'temps-asc', 'temps-desc', 'populaire'];
 	$this->tri = isset($_GET['trier']) && in_array($_GET['trier'], $triOptions) ? $_GET['trier'] : 'enchere_id-asc'; // Tri par défaut : enchere_id ascendant
 
-	// retour à la page pour favori
-	$this->page = $_GET['page'] ?? null;
 
     $this->oRequetesSQL = new RequetesSQL;
   }
@@ -105,23 +101,12 @@ class Frontend extends Routeur {
    * Page d'accueil
    */  
   public function voirAccueil() {
-	$params = [];
-	if ($this->oUtilConn != null) {
-        $params['utilisateur_id'] = $this->oUtilConn->utilisateur_id;
-    }
-
-	// Pour les encheres recentes
-    $encheres = $this->oRequetesSQL->getEncheres($params, "recent");
-	// Pour les encheres coup de coeur du Lord
-    $encheresCDC = $this->oRequetesSQL->getEncheres($params, "cdcLord");
+    // ===> à compléter
     new Vue(
       'vAccueil',
       [
         'oUtilConn' => $this->oUtilConn,
-        'titre'    => "Accueil",
-		'encheres' => $encheres,
-		'encheresCDC' => $encheresCDC,
-		'page'		=> "accueil"
+        'titre'    => "Accueil"
       ]
     );
   }
@@ -141,17 +126,21 @@ class Frontend extends Routeur {
   }
 
   
-  private function listerCatalogue($page, $titre) {
-    $keyword = isset($_GET['search']) ? $_GET['search'] : null;
-    $params = [];
+  /**
+   * Lister les encheres dans la page catalogue
+   * 
+   */  
+  public function listerEncheres() {
+	$keyword = isset($_GET['search']) ? $_GET['search'] : null;
+	$params = [];
 
-    // Le paramètre de recherche
-    if (isset($_GET['search'])) {
-        $params['keyword'] = $_GET['search'];
-    }
-    if ($this->oUtilConn != null) {
-        $params['utilisateur_id'] = $this->oUtilConn->utilisateur_id;
-    }
+	// le paramètre de recherche
+	if(isset($_GET['search'])) {
+		$params['keyword'] = $_GET['search'];
+	}
+	if($this->oUtilConn != null) {
+		$params['utilisateur_id'] = $this->oUtilConn->utilisateur_id;
+	}
 
     // Récupérer le choix de tri de l'utilisateur (par défaut, trier par prix ascendant)
     $tri = $this->tri;
@@ -159,6 +148,57 @@ class Frontend extends Routeur {
     // Fonction de comparaison pour trier le tableau en fonction du choix de l'utilisateur
     function comparerEncheres($enchere1, $enchere2, $tri)
     {
+		
+        switch ($tri) {
+            case 'enchere_id-asc':
+                return $enchere1['enchere_id'] - $enchere2['enchere_id'];
+            case 'enchere_id-desc':
+                return $enchere2['enchere_id'] - $enchere1['enchere_id'];
+            default:
+                return 0; // Aucun tri
+        }
+    }
+    $encheres = $this->oRequetesSQL->getEncheres($params, "enCours");
+	// Trier le tableau $encheres en utilisant la fonction de comparaison
+	usort($encheres, function ($enchere1, $enchere2) use ($tri) {
+		return comparerEncheres($enchere1, $enchere2, $tri);
+	});
+
+	// var_dump($encheres);
+    new Vue("vListeEncheres",
+            array(
+              'oUtilConn' => $this->oUtilConn,
+              'titre'  => "Catalogue - Enchères en cours",
+              'encheres' => $encheres,
+			  'keyword' => $keyword,
+			  'tri'	=> $tri
+            ),
+            "gabarit-frontend");
+  }
+
+  /**
+   * Lister les encheres archivées dans la page catalogue archives
+   * 
+   */  
+  public function listerArchives() {
+	$keyword = isset($_GET['search']) ? $_GET['search'] : null;
+	$params = [];
+
+	// le paramètre de recherche
+	if(isset($_GET['search'])) {
+		$params['keyword'] = $_GET['search'];
+	}
+	if($this->oUtilConn != null) {
+		$params['utilisateur_id'] = $this->oUtilConn->utilisateur_id;
+	}
+
+    // Récupérer le choix de tri de l'utilisateur (par défaut, trier par prix ascendant)
+    $tri = $this->tri;
+
+    // Fonction de comparaison pour trier le tableau en fonction du choix de l'utilisateur
+    function comparerArchives($enchere1, $enchere2, $tri)
+    {
+		
         switch ($tri) {
             case 'enchere_id-asc':
                 return $enchere1['enchere_id'] - $enchere2['enchere_id'];
@@ -169,45 +209,23 @@ class Frontend extends Routeur {
         }
     }
 
-    $encheres = $this->oRequetesSQL->getEncheres($params, $page);
+    $encheres = $this->oRequetesSQL->getEncheres($params, "archives");
+	// Trier le tableau $encheres en utilisant la fonction de comparaison
+	usort($encheres, function ($enchere1, $enchere2) use ($tri) {
+		return comparerEncheres($enchere1, $enchere2, $tri);
+	});
 
-    // Trier le tableau $encheres en utilisant la fonction de comparaison
-    usort($encheres, function ($enchere1, $enchere2) use ($tri) {
-        return comparerEncheres($enchere1, $enchere2, $tri);
-    });
-
-    new Vue(
-        "vListerCatalogue",
-        array(
-            'oUtilConn' => $this->oUtilConn,
-            'titre'  => $titre,
-            'encheres' => $encheres,
-            'keyword' => $keyword,
-            'tri'    => $tri,
-			'page'	=> $page
-        ),
-        "gabarit-frontend"
-    );
-}
-
-public function listerEncheres() {
-	$page = "catalogue";
-	$titre = "Enchères en cours";
-    $this->listerCatalogue($page, $titre);
-}
-
-public function listerArchives() {
-	$page = "archives";
-	$titre = "Enchères archivées";
-    $this->listerCatalogue($page, $titre);
-}
-
-public function listerProchainement() {
-	$page = "prochainement";
-	$titre = "Enchères à venir";
-    $this->listerCatalogue($page, $titre);
-}
-
+	// var_dump($encheres);
+    new Vue("vListeEncheres",
+            array(
+              'oUtilConn' => $this->oUtilConn,
+              'titre'  => "Catalogue - Enchères archivées",
+              'encheres' => $encheres,
+			  'keyword' => $keyword,
+			  'tri'	=> $tri
+            ),
+            "gabarit-frontend");
+  }
 //   /**
 //    * Lister les encheres dans la page catalogue
 //    * 
@@ -318,22 +336,19 @@ public function listerProchainement() {
 	 */  
 	public function favori() {
 
-		if (!is_null($this->enchere_id) && ($this->oUtilConn != null)) {
-			$enchere_id = $this->enchere_id;
-			$this->oRequetesSQL->favori([
-				'enchere_id' => $enchere_id,
-				'utilisateur_id' => $this->oUtilConn->utilisateur_id]);
-		}
-
-		if (!is_null($this->page)) {
-			$page = $this->page; 
-			header("Location: $page#eid$enchere_id");
-		}
-		else {
-			("Location: catalogue");
-		// header("Location: catalogue");
-		}
+	if (!is_null($this->enchere_id) && ($this->oUtilConn != null)) {
+		$enchere_id = $this->enchere_id;
+		$this->oRequetesSQL->favori([
+			'enchere_id' => $enchere_id,
+			'utilisateur_id' => $this->oUtilConn->utilisateur_id]);
 	}
+
+	// $this->listerEncheres(); // Retour sur la page de liste des enchères
+	// exit;
+	header("Location: catalogue#eid$enchere_id");
+	// header("Location: catalogue");
+
+  }
 
 
 

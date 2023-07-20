@@ -38,7 +38,7 @@ class RequetesSQL extends RequetesPDO {
    * Récupération des encheres à afficher dans la page catalogue
    * @return array tableau des lignes produites par la select   
    */ 
-  public function getEncheres($params = [], $critere = "enCours") {
+  public function getEncheres($params = [], $page = "catalogue") {
     // $utilisateur_id = isset($params['utilisateur_id']) ? $params['utilisateur_id'] : null;
     // $keyword = isset($params['keyword']) ? $params['keyword'] : null;
 
@@ -71,8 +71,10 @@ class RequetesSQL extends RequetesPDO {
       $this->sql .= ' LEFT JOIN favori ON favori.id_utilisateur = :utilisateur_id AND favori.id_enchere = enchere.enchere_id';
     }
 
-    switch($critere) {
-      case 'enCours':
+    switch($page) {
+      case 'catalogue':
+      case 'recent':
+      case 'cdcLord':
         $this->sql .= '
         WHERE
             enchere_date_debut < NOW() AND enchere_date_fin > NOW()';
@@ -87,11 +89,9 @@ class RequetesSQL extends RequetesPDO {
         break;
     }      
 
-    $this->sql .= '
-    WHERE
-        TIMEDIFF(enchere_date_fin, NOW()) > 0';
-
-
+    if ($page == "cdcLord") {
+      $this->sql .= ' AND enchere_cdc_lord = 1';
+    }
 
     if (isset($params['keyword'])) {
         $this->sql .= ' AND timbre.timbre_nom LIKE :keyword';
@@ -99,7 +99,10 @@ class RequetesSQL extends RequetesPDO {
 
     $this->sql .= ' GROUP BY enchere_id';
 
-    // $params['utilisateur_id'] = $utilisateur_id;
+    if ($page == "recent") {
+        $this->sql .= ' ORDER BY enchere_id DESC
+                        LIMIT 12';
+    }
 
     if (isset($params['keyword'])) {
       $params['keyword'] = '%' . $params['keyword'] . '%';
