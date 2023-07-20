@@ -17,10 +17,10 @@ class Utilisateur extends Entite
   protected $nouveau_mdp;
   protected $nouveau_mdp_bis;
 
-  const PROFIL_ADMINISTRATEUR = "administrateur";
-  // const PROFIL_EDITEUR        = "editeur";
-  // const PROFIL_CORRECTEUR     = "correcteur";
-  const PROFIL_CLIENT         = "client";
+  // const PROFIL_ADMINISTRATEUR = "administrateur";
+  // // const PROFIL_EDITEUR        = "editeur";
+  // // const PROFIL_CORRECTEUR     = "correcteur";
+  // const PROFIL_CLIENT         = "client";
   
   const ERR_COURRIEL_EXISTANT = "Courriel déjà utilisé.";
   const ERR_PSEUDO_EXISTANT = "Pseudo déjà utilisé.";
@@ -127,7 +127,7 @@ class Utilisateur extends Entite
   //   return $this;
   // }
 
-    /**
+  /**
    * Mutateur de la propriété utilisateur_mdp
    * @param string $utilisateur_mdp
    * @return $this

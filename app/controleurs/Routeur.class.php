@@ -12,6 +12,8 @@ class Routeur {
   // ------------------------------------
     ["",              "Frontend", "voirAccueil"],
     ["catalogue",     "Frontend", "listerEncheres"],
+    ["prochainement", "Frontend", "listerProchainement"],
+    ["archives",      "Frontend", "listerArchives"],
     ["enchere",       "Frontend", "voirEnchere"],
     ["connecter",     "Frontend", "connecter"],
     ["profil",        "Frontend", "gererProfil"],

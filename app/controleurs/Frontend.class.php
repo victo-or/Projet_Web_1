@@ -30,6 +30,8 @@ class Frontend extends Routeur {
   private $enchere_id;
   private $timbre_id;
   private $oUtilConn;
+
+  private $tri;
   
   private $classRetour = "fait";
   private $messageRetourAction = "";
@@ -47,6 +49,10 @@ class Frontend extends Routeur {
     // gestion profil
     $this->entite    = $_GET['entite']    ?? null;
     $this->action    = $_GET['action']    ?? null;
+
+	// Gérer le tri
+	$triOptions = ['prix-asc', 'prix-desc', 'nom-asc', 'nom-desc', 'enchere_id-asc', 'enchere_id-desc', 'temps-asc', 'temps-desc', 'populaire'];
+	$this->tri = isset($_GET['trier']) && in_array($_GET['trier'], $triOptions) ? $_GET['trier'] : 'enchere_id-asc'; // Tri par défaut : enchere_id ascendant
 
 
     $this->oRequetesSQL = new RequetesSQL;
@@ -119,6 +125,7 @@ class Frontend extends Routeur {
     );
   }
 
+  
   /**
    * Lister les encheres dans la page catalogue
    * 
@@ -127,6 +134,7 @@ class Frontend extends Routeur {
 	$keyword = isset($_GET['search']) ? $_GET['search'] : null;
 	$params = [];
 
+	// le paramètre de recherche
 	if(isset($_GET['search'])) {
 		$params['keyword'] = $_GET['search'];
 	}
@@ -134,18 +142,90 @@ class Frontend extends Routeur {
 		$params['utilisateur_id'] = $this->oUtilConn->utilisateur_id;
 	}
 
-    $encheres = $this->oRequetesSQL->getEncheres($params);
+    // Récupérer le choix de tri de l'utilisateur (par défaut, trier par prix ascendant)
+    $tri = $this->tri;
+
+    // Fonction de comparaison pour trier le tableau en fonction du choix de l'utilisateur
+    function comparerEncheres($enchere1, $enchere2, $tri)
+    {
+		
+        switch ($tri) {
+            case 'enchere_id-asc':
+                return $enchere1['enchere_id'] - $enchere2['enchere_id'];
+            case 'enchere_id-desc':
+                return $enchere2['enchere_id'] - $enchere1['enchere_id'];
+            default:
+                return 0; // Aucun tri
+        }
+    }
+    $encheres = $this->oRequetesSQL->getEncheres($params, "enCours");
+	// Trier le tableau $encheres en utilisant la fonction de comparaison
+	usort($encheres, function ($enchere1, $enchere2) use ($tri) {
+		return comparerEncheres($enchere1, $enchere2, $tri);
+	});
+
 	// var_dump($encheres);
     new Vue("vListeEncheres",
             array(
               'oUtilConn' => $this->oUtilConn,
-              'titre'  => "Catalogue des enchères",
+              'titre'  => "Catalogue - Enchères en cours",
               'encheres' => $encheres,
-			  'keyword' => $keyword
+			  'keyword' => $keyword,
+			  'tri'	=> $tri
             ),
             "gabarit-frontend");
   }
 
+  /**
+   * Lister les encheres archivées dans la page catalogue archives
+   * 
+   */  
+  public function listerArchives() {
+	$keyword = isset($_GET['search']) ? $_GET['search'] : null;
+	$params = [];
+
+	// le paramètre de recherche
+	if(isset($_GET['search'])) {
+		$params['keyword'] = $_GET['search'];
+	}
+	if($this->oUtilConn != null) {
+		$params['utilisateur_id'] = $this->oUtilConn->utilisateur_id;
+	}
+
+    // Récupérer le choix de tri de l'utilisateur (par défaut, trier par prix ascendant)
+    $tri = $this->tri;
+
+    // Fonction de comparaison pour trier le tableau en fonction du choix de l'utilisateur
+    function comparerArchives($enchere1, $enchere2, $tri)
+    {
+		
+        switch ($tri) {
+            case 'enchere_id-asc':
+                return $enchere1['enchere_id'] - $enchere2['enchere_id'];
+            case 'enchere_id-desc':
+                return $enchere2['enchere_id'] - $enchere1['enchere_id'];
+            default:
+                return 0; // Aucun tri
+        }
+    }
+
+    $encheres = $this->oRequetesSQL->getEncheres($params, "archives");
+	// Trier le tableau $encheres en utilisant la fonction de comparaison
+	usort($encheres, function ($enchere1, $enchere2) use ($tri) {
+		return comparerEncheres($enchere1, $enchere2, $tri);
+	});
+
+	// var_dump($encheres);
+    new Vue("vListeEncheres",
+            array(
+              'oUtilConn' => $this->oUtilConn,
+              'titre'  => "Catalogue - Enchères archivées",
+              'encheres' => $encheres,
+			  'keyword' => $keyword,
+			  'tri'	=> $tri
+            ),
+            "gabarit-frontend");
+  }
 //   /**
 //    * Lister les encheres dans la page catalogue
 //    * 
@@ -410,15 +490,30 @@ class Frontend extends Routeur {
 			if (isset($_FILES['timbre_image_principale']) && $_FILES['timbre_image_principale']['tmp_name'] !== "") {
 				$oTimbre->setTimbre_image_principale($_FILES['timbre_image_principale']['name']); // pour contrôler le suffixe
 			}
-			var_dump($_FILES['timbre_image_principale']['error']);
-			var_dump($_FILES['timbre_image_principale']);
+			// var_dump($_FILES['timbre_image_principale']['error']);
+			// var_dump($_FILES['timbre_image_principale']);
+			var_dump($_FILES['image_fichier']);
+			var_dump($_FILES['image_fichier']['name']);
+			// if (isset($_FILES['image_fichier']) && !empty($_FILES['image_fichier']['name'])) {
+			// 	$image_files = $_FILES['image_fichier'];
+	
+			// 	foreach ($image_files['name'] as $filename) {
+			// 		$oTimbre->setImage_fichier($filename);
+			// 	}
+	
+			// 	$erreursTimbre = $oTimbre->erreurs;
+			// }
+
 			if (isset($_FILES['image_fichier'])) {
 				$image_files = $_FILES['image_fichier'];
-	
+			
+				// Éliminer les valeurs vides du tableau des noms de fichiers
+				$image_files['name'] = array_filter($image_files['name']);
+			
 				foreach ($image_files['name'] as $filename) {
 					$oTimbre->setImage_fichier($filename);
 				}
-	
+			
 				$erreursTimbre = $oTimbre->erreurs;
 			}
 			
@@ -437,7 +532,7 @@ class Frontend extends Routeur {
 					'timbre_certifie' => $oTimbre->timbre_certifie,
 					'timbre_description' => $oTimbre->timbre_description,
 					'timbre_couleur' => $oTimbre->timbre_couleur,
-					'timbre_pays' => $oTimbre->timbre_pays],
+					'timbre_pays_origine' => $oTimbre->timbre_pays_origine],
 					// 'timbre_image_principale' => $oTimbre->timbre_image_principale,
 					['id_vendeur' => $id_utilisateur,
 					'enchere_prix_plancher' => $oEnchere->enchere_prix_plancher,

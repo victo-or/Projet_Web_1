@@ -15,7 +15,7 @@ class Timbre extends Entite
     protected $timbre_largeur;
     protected $timbre_certifie;
     protected $timbre_description;
-    protected $timbre_pays;
+    protected $timbre_pays_origine;
     protected $timbre_couleur;
     protected $timbre_image_principale;
     protected $image_fichier;
@@ -235,20 +235,20 @@ class Timbre extends Entite
     }
 
     /**
-     * Mutateur de la propriété timbre_pays
-     * @param string $timbre_pays
+     * Mutateur de la propriété timbre_pays_origine
+     * @param string $timbre_pays_origine
      * @return $this
      */    
-    public function setTimbre_pays($timbre_pays) {
-        unset($this->erreurs['timbre_pays']);
-        $timbre_pays = trim($timbre_pays);
-        if (empty($timbre_pays) || $timbre_pays === 'Choisir une option') {
-            $this->erreurs['timbre_pays'] = "Saisie obligatoire.";
+    public function setTimbre_pays_origine($timbre_pays_origine) {
+        unset($this->erreurs['timbre_pays_origine']);
+        $timbre_pays_origine = trim($timbre_pays_origine);
+        if (empty($timbre_pays_origine) || $timbre_pays_origine === 'Choisir une option') {
+            $this->erreurs['timbre_pays_origine'] = "Saisie obligatoire.";
         }
-        else if (!in_array($timbre_pays, self::VALEURS_POSSIBLES_PAYS)) {
-            $this->erreurs['timbre_pays'] = "Veuillez sélectionner un pays de la liste.";
+        else if (!in_array($timbre_pays_origine, self::VALEURS_POSSIBLES_PAYS)) {
+            $this->erreurs['timbre_pays_origine'] = "Veuillez sélectionner un pays de la liste.";
         }
-        $this->timbre_pays = $timbre_pays;
+        $this->timbre_pays_origine = $timbre_pays_origine;
         return $this;
     }
 
@@ -299,7 +299,7 @@ class Timbre extends Entite
         $image_fichier = trim($image_fichier);
         $regExp = '/^.+\.(jpg|webp)$/i'; // Accepte les fichiers avec les extensions jpg et webp (insensible à la casse)
         if (!preg_match($regExp, $image_fichier)) {
-        $this->erreurs['image_fichier'] = "Vous devez téléverser un fichier de type jpg ou webp.";
+        $this->erreurs['image_fichier'] = "Image- Vous devez téléverser un fichier de type jpg ou webp.";
         }
         $this->image_fichier = $image_fichier;
         return $this;

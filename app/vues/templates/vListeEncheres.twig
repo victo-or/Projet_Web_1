@@ -545,7 +545,49 @@
             <option value="all">Voir tout</option>
           </select>
         </div>
-        <div class="section">
+
+        {# <script>
+          // Écouter l'événement DOMContentLoaded pour exécuter le script lorsque le DOM est prêt
+          document.addEventListener('DOMContentLoaded', function () {
+            // Sélectionnez le formulaire et le select
+            const triForm = document.getElementById('triForm');
+            const selectTrier = document.getElementById('trier');
+
+            // Écoutez l'événement "change" sur le select
+            selectTrier.addEventListener('change', function () {
+              // Soumettez automatiquement le formulaire lorsque la sélection change
+              triForm.submit();
+            });
+          });
+        </script> #}
+
+                <script>
+          // Fonction pour soumettre automatiquement le formulaire lorsque la sélection change
+          function submitForm() {
+            const triForm = document.getElementById('triForm');
+            triForm.submit();
+          }
+        </script>
+        <form id="triForm" action="/catalogue" method="GET">
+          <div class="section">
+            <label for="trier">Trier par :</label>
+            <select id="trier" name="trier" onchange="submitForm()">
+              <option value="prix-asc" {% if tri == 'prix-asc' %}selected{% endif %}>Prix (asc)</option>
+              <option value="prix-desc" {% if tri == 'prix-desc' %}selected{% endif %}>Prix (desc)</option>
+              <option value="nom-asc" {% if tri == 'nom-asc' %}selected{% endif %}>Nom (asc)</option>
+              <option value="nom-desc" {% if tri == 'nom-desc' %}selected{% endif %}>Nom (desc)</option>
+              <option value="enchere_id-asc" {% if tri == 'enchere_id-asc' %}selected{% endif %}># Enchère (asc)</option>
+              <option value="enchere_id-desc" {% if tri == 'enchere_id-desc' %}selected{% endif %}># Enchère (desc)</option>
+              <option value="temps-asc" {% if tri == 'temps-asc' %}selected{% endif %}>Temps restant (asc)</option>
+              <option value="temps-desc" {% if tri == 'temps-desc' %}selected{% endif %}>Temps restant (desc)</option>
+              <option value="populaire" {% if tri == 'populaire' %}selected{% endif %}>Populaire</option>
+            </select>
+          </div>
+        </form>
+
+
+
+        {# <div class="section">
           <label for="trier">Trier par :</label>
           <select id="trier" name="trier">
             <option value="prix-asc">Prix (asc)</option>
@@ -558,17 +600,17 @@
             <option value="nom-desc">Temps restant (desc)</option>
             <option value="nom-desc">Populaire</option>
           </select>
-        </div>
+        </div> #}
       </div>
     </div>
     <div class="filter-selections">
       <span class="lots">{{ encheres|length }} items:</span>
-      <span class="filter-selection"
+      {# <span class="filter-selection"
         >$120-$500 <button class="btn-close">x</button>
       </span>
       <span class="filter-selection"
         >Certifié <button class="btn-close">x</button>
-      </span>
+      </span> #}
     </div>
     <div class="grid">
     {% for enchere in encheres %}
@@ -576,9 +618,8 @@
         <div class="card-image-container">
           <a href="enchere?enchere_id={{ enchere.enchere_id }}" class="card-image-link">
             <img
-              src="medias/image_principale/{{ enchere.timbre_image_principale }}.webp"
-              alt="image de Bloc de quatre du Canal du Saint-Laurent avec centre
-              inversé"
+              src="{{ enchere.timbre_image_principale }}"
+              alt="image de l'item {{ enchere.timbre_nom }}"
               class="card-image"
             >
           </a>
@@ -670,7 +711,7 @@
             </h2></a
           >
           <div>
-            <span>{{ enchere.timbre_date_creation }}, {{ enchere.timbre_pays }}, {{ enchere.timbre_couleur }}</span>
+            <span>{{ enchere.timbre_date_creation }}, {{ enchere.timbre_pays_origine }}, {{ enchere.timbre_couleur }}</span>
           </div>
           <div class="card-price">
             C$ {% if enchere.offre_actuelle is not null %}{{ enchere.offre_actuelle }}{% else %}{{ enchere.enchere_prix_plancher }}{% endif %} <span class="card-bid-count">({{ enchere.nb_mises }} mises)</span>

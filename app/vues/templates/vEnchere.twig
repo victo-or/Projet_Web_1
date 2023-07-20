@@ -1,8 +1,8 @@
 <div class="enchere">
   <div class="image">
-    <img src="medias/image_principale/{{ enchere.timbre_image_principale }}.webp" alt="Image principale du timbre">
+    <img src="{{ enchere.timbre_image_principale }}" alt="Image principale du timbre">
     {% for image in images %}
-      <img src="{{ image_fichier }}" alt="Image supplémentaire du timbre">
+      <img src="{{ image.image_fichier }}" alt="Image supplémentaire du timbre">
     {% endfor %}
   </div>
   <div class="details">

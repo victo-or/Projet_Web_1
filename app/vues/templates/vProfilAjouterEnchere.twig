@@ -1,7 +1,7 @@
 <section class="formulaire-ajout">
     <h1>{{ titre|upper }}</h1>
     
-    <form method="POST" action="profil?entite=enchere&action=a">
+    <form method="POST" action="profil?entite=enchere&action=a" enctype="multipart/form-data">
         <label>Titre</label>
         <input name="timbre[timbre_nom]" value="{{ donneesFormulaire.timbre.timbre_nom }}">
         <span class="formulaire-erreur">&nbsp;{{ erreursTimbre.timbre_nom }}</span>
@@ -33,14 +33,14 @@
         </select>
         <span class="formulaire-erreur">&nbsp;{{ erreursTimbre.timbre_condition }}</span>
 
-        <label for="timbre_pays">Pays du timbre :</label>
-        <select id="timbre_pays" name="timbre[timbre_pays]">
+        <label for="timbre_pays_origine">Pays du timbre :</label>
+        <select id="timbre_pays_origine" name="timbre[timbre_pays_origine]">
         <option disabled selected>Choisir un pays</option>
         {% for pays in listePays %}
-            <option value="{{ pays }}" {% if pays == donneesFormulaire.timbre.timbre_pays %}selected{% endif %}>{{ pays }}</option>
+            <option value="{{ pays }}" {% if pays == donneesFormulaire.timbre.timbre_pays_origine %}selected{% endif %}>{{ pays }}</option>
         {% endfor %}
         </select>
-        <span class="formulaire-erreur">&nbsp;{{ erreursTimbre.timbre_pays }}</span>
+        <span class="formulaire-erreur">&nbsp;{{ erreursTimbre.timbre_pays_origine }}</span>
 
         <label>Tirage du timbre</label>
         <input name="timbre[timbre_tirage]" value="{{ donneesFormulaire.timbre.timbre_tirage }}">

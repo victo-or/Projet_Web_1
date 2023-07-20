@@ -1,31 +1,43 @@
--- Ajout de données dans la bd stampee
+-- Ajout de données dans la bd stampee1
 
 -- utilisateur
-INSERT INTO utilisateur (utilisateur_id, utilisateur_prenom, utilisateur_nom, utilisateur_pseudo, utilisateur_courriel, utilisateur_mdp,utilisateur_profil) VALUES
-(1, 'Prénom 1', 'Nom 1', 'Pseudo1', 'prenom1.nom1@test.com', SHA2('motdepasse1', 512), 'client'),
-(2, 'Prénom 2', 'Nom 2', 'Pseudo2', 'prenom2.nom2@test.com', SHA2('motdepasse2', 512), 'client'),
-(3, 'Prénom 3', 'Nom 3', 'Pseudo3', 'prenom3.nom3@test.com', SHA2('motdepasse3', 512), 'client'),
-(4, 'Prénom 4', 'Nom 4', 'Pseudo4', 'prenom4.nom4@test.com', SHA2('motdepasse4', 512), 'client'),
-(5, 'Prénom 5', 'Nom 5', 'Pseudo5', 'prenom5.nom5@test.com', SHA2('motdepasse5', 512), 'client'),
-(6, 'Prénom 6', 'Nom 6', 'Pseudo6', 'prenom6.nom6@test.com', SHA2('motdepasse6', 512), 'client'),
-(7, 'Prénom 7', 'Nom 7', 'Pseudo7', 'prenom7.nom7@test.com', SHA2('motdepasse7', 512), 'client'),
-(8, 'Prénom 8', 'Nom 8', 'Pseudo8', 'prenom8.nom8@test.com', SHA2('motdepasse8', 512), 'client'),
-(9, 'Prénom 9', 'Nom 9', 'Pseudo9', 'prenom9.nom9@test.com', SHA2('motdepasse9', 512), 'client'),
-(10, 'Prénom 10', 'Nom 10', 'Pseudo10', 'prenom10.nom10@test.com', SHA2('motdepasse10', 512), 'client');
+INSERT INTO utilisateur (utilisateur_id, utilisateur_prenom, utilisateur_nom, utilisateur_pseudo, utilisateur_courriel, utilisateur_mdp) VALUES
+(1, 'Prénom 1', 'Nom 1', 'Pseudo1', 'prenom1.nom1@test.com', SHA2('motdepasse1', 512)),
+(2, 'Prénom 2', 'Nom 2', 'Pseudo2', 'prenom2.nom2@test.com', SHA2('motdepasse2', 512)),
+(3, 'Prénom 3', 'Nom 3', 'Pseudo3', 'prenom3.nom3@test.com', SHA2('motdepasse3', 512)),
+(4, 'Prénom 4', 'Nom 4', 'Pseudo4', 'prenom4.nom4@test.com', SHA2('motdepasse4', 512)),
+(5, 'Prénom 5', 'Nom 5', 'Pseudo5', 'prenom5.nom5@test.com', SHA2('motdepasse5', 512)),
+(6, 'Prénom 6', 'Nom 6', 'Pseudo6', 'prenom6.nom6@test.com', SHA2('motdepasse6', 512)),
+(7, 'Prénom 7', 'Nom 7', 'Pseudo7', 'prenom7.nom7@test.com', SHA2('motdepasse7', 512)),
+(8, 'Prénom 8', 'Nom 8', 'Pseudo8', 'prenom8.nom8@test.com', SHA2('motdepasse8', 512)),
+(9, 'Prénom 9', 'Nom 9', 'Pseudo9', 'prenom9.nom9@test.com', SHA2('motdepasse9', 512)),
+(10, 'Prénom 10', 'Nom 10', 'Pseudo10', 'prenom10.nom10@test.com', SHA2('motdepasse10', 512));
 
+-- role
+INSERT INTO `role` (role_id, id_utilisateur, role_nom) VALUES
+(null, 1, 'client'),
+(null, 2, 'client'),
+(null, 3, 'client'),
+(null, 4, 'client'),
+(null, 5, 'client'),
+(null, 6, 'client'),
+(null, 7, 'client'),
+(null, 8, 'client'),
+(null, 9, 'client'),
+(null, 10, 'client');
 
 -- timbre
 INSERT INTO timbre (timbre_id, timbre_nom, timbre_date_creation, timbre_pays_origine, timbre_image_principale, timbre_condition, timbre_tirage, timbre_longueur, timbre_largeur, timbre_certifie, timbre_description, timbre_couleur, id_utilisateur) VALUES
-(1, 'Nom 1', '2022-01-01', 'Pays 1', '1', 'parfaite', 1000, 2.5, 3.5, 1, 'Description 1', 'Rouge', 1),
-(2, 'Nom 2', '2022-02-01', 'Pays 2', '2', 'excellente', 2000, 3.5, 4.5, 0, 'Description 2', 'Bleu', 2),
-(3, 'Nom 3', '2022-03-01', 'Pays 3', '3', 'bonne', 3000, 4.5, 5.5, 1, 'Description 3', 'Orange', 3),
-(4, 'Nom 4', '2022-04-01', 'Pays 4', '4', 'moyenne', 4000, 5.5, 6.5, 0, 'Description 4', 'Jaune', 4),
-(5, 'Nom 5', '2022-05-01', 'Pays 5', '5', 'endommagé', 5000, 6.5, 7.5, 1, 'Description 5', 'Vert', 5),
-(6, 'Nom 6', '2022-06-01', 'Pays 6', '6', 'parfaite', 6000, 7.5, 8.5, 0, 'Description 6', 'Rose', 6),
-(7, 'Nom 7', '2022-07-01', 'Pays 7', '7', 'excellente', 7000, 8.5, 9.5, 1, 'Description 7', 'Mauve', 7),
-(8, 'Nom 8', '2022-08-01', 'Pays 8', '8', 'bonne', 8000, 9.5, 10.5, 0, 'Description 8', 'Noir/Blanc', 8),
-(9, 'Nom 9', '2022-09-01', 'Pays 9', '9', 'moyenne', 9000, 10.5, 11.5, 1, 'Description 9', 'Gris', 9),
-(10, 'Nom 10', '2022-10-01', 'Pays 10', '10', 'endommagé', 10000, 11.5, 12.5, 0, 'Description 10', 'Argent', 10);
+(1, 'Nom 1', '2022-01-01', 'Canada', '1', 'parfaite', 1000, 2.5, 3.5, 1, 'Description 1', 'Rouge', 1),
+(2, 'Nom 2', '2022-02-01', 'Angleterre', '2', 'excellente', 2000, 3.5, 4.5, 0, 'Description 2', 'Bleu', 2),
+(3, 'Nom 3', '2022-03-01', 'Mexique', '3', 'bonne', 3000, 4.5, 5.5, 1, 'Description 3', 'Orange', 3),
+(4, 'Nom 4', '2022-04-01', 'Italie', '4', 'moyenne', 4000, 5.5, 6.5, 0, 'Description 4', 'Jaune', 4),
+(5, 'Nom 5', '2022-05-01', 'France', '5', 'endommagé', 5000, 6.5, 7.5, 1, 'Description 5', 'Vert', 5),
+(6, 'Nom 6', '2022-06-01', 'Chine', '6', 'parfaite', 6000, 7.5, 8.5, 0, 'Description 6', 'Rose', 6),
+(7, 'Nom 7', '2022-07-01', 'Allemagne', '7', 'excellente', 7000, 8.5, 9.5, 1, 'Description 7', 'Mauve', 7),
+(8, 'Nom 8', '2022-08-01', 'États-Unis', '8', 'bonne', 8000, 9.5, 10.5, 0, 'Description 8', 'Noir/Blanc', 8),
+(9, 'Nom 9', '2022-09-01', 'Canada', '9', 'moyenne', 9000, 10.5, 11.5, 1, 'Description 9', 'Gris', 9),
+(10, 'Nom 10', '2022-10-01', 'Canada', '10', 'endommagé', 10000, 11.5, 12.5, 0, 'Description 10', 'Argent', 10);
 
 -- image
 INSERT INTO image (image_id, id_timbre, image_fichier) VALUES
